@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lä Bertō's Click</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Запрет выделения текста */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        
+        /* Запрет масштабирования */
+        html {
+            touch-action: manipulation;
+            height: 100%;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        :root {
+            --primary: #8e44ad;
+            --secondary: #9b59b6;
+            --accent: #e74c3c;
+            --text: #2c3e50;
+            --bg: #f9f9f9;
+            --premium: #f1c40f;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --stat-bg: #ffffff;
+        }
+        
+        /* Темная тема */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #ecf0f1;
+                --bg: #121212;
+                --card-bg: #1e1e1e;
+                --border: #333333;
+                --stat-bg: #252525;
+            }
+            
+            .header {
+                background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+            }
+            
+            .upgrade {
+                background: var(--card-bg) !important;
+                color: var(--text) !important;
+            }
+            
+            .upgrade-desc {
+                color: #bdc3c7 !important;
+            }
+            
+            .stats-container {
+                background: var(--stat-bg) !important;
+                color: var(--text) !important;
+            }
+            
+            .stat {
+                border-bottom-color: var(--border) !important;
+            }
+            
+            .tabs {
+                background: var(--card-bg) !important;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            14% { color: #ff7f00; }
+            28% { color: #ffff00; }
+            42% { color: #00ff00; }
+            57% { color: #0000ff; }
+            71% { color: #4b0082; }
+            85% { color: #9400d3; }
+            100% { color: #ff0000; }
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-out;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 6vw, 2.2rem);
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 9;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+            flex-grow: 1;
+            animation: fadeIn 0.3s ease-out;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        #clickButton {
+            width: clamp(120px, 40vw, 180px);
+            height: clamp(120px, 40vw, 180px);
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+            animation: pulse 2s infinite;
+        }
+        
+        #clickButton:active {
+            transform: scale(0.95);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            animation: none;
+        }
+        
+        #score {
+            font-size: clamp(1.5rem, 6vw, 1.75rem);
+            font-weight: bold;
+            margin: 15px 0;
+            color: var(--primary);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .upgrades-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .upgrade {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: left;
+            transition: all 0.3s;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .upgrade:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .upgrade.premium {
+            border: 2px solid var(--premium);
+            background: linear-gradient(to bottom right, white, #fff9e6);
+        }
+        
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .upgrade-name {
+            font-weight: 600;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            color: var(--primary);
+        }
+        
+        .upgrade-name.premium {
+            color: var(--premium);
+            animation: rainbow 3s infinite;
+        }
+        
+        .upgrade-cost {
+            background: var(--accent);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 3vw, 0.85rem);
+            font-weight: bold;
+            animation: bounce 1s infinite;
+        }
+        
+        .upgrade-cost.premium {
+            background: var(--premium);
+            color: var(--text);
+        }
+        
+        .upgrade-desc {
+            color: #666;
+            margin-bottom: 12px;
+            font-size: clamp(0.75rem, 3vw, 0.85rem);
+        }
+        
+        .upgrade-btn {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+        
+        .upgrade-btn.premium {
+            background: linear-gradient(135deg, var(--premium), #f39c12);
+            color: var(--text);
+        }
+        
+        .upgrade-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .upgrade-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .stats-container {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-top: 15px;
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+        }
+        
+        .stat:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-name {
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        /* Эффект при клике */
+        .click-effect {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: clickAnimation 0.8s forwards;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes clickAnimation {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+        
+        /* Прогресс бар для премиум улучшений */
+        .premium-progress {
+            height: 5px;
+            background: #eee;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .premium-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--premium), #f39c12);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* Настройки */
+        .settings-container {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-top: 15px;
+        }
+        
+        .settings-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .settings-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border: 2px solid var(--text);
+            transform: scale(1.1);
+        }
+        
+        .language-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .language-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            background: transparent;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .language-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Чит-код панель */
+        .cheat-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+            max-width: 90%;
+            width: 300px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .cheat-panel h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .cheat-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+        }
+        
+        .cheat-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .cheat-submit:hover {
+            background: var(--secondary);
+        }
+        
+        .cheat-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        
+        .cheat-message {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .cheat-success {
+            background: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        
+        .cheat-error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        
+        /* Адаптация для очень маленьких экранов */
+        @media (max-width: 350px) {
+            .upgrades-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab {
+                padding: 10px 3px;
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Адаптация для планшетов и больших экранов */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+                margin: 0 auto;
+            }
+            
+            #clickButton {
+                width: 200px;
+                height: 200px;
+                font-size: 1.8rem;
+            }
+            
+            .upgrades-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Lä Bertō's Click</h1>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="clicker">Кликер</div>
+            <div class="tab" data-tab="upgrades">Улучшения</div>
+            <div class="tab" data-tab="stats">Статистика</div>
+            <div class="tab" data-tab="settings">Настройки</div>
+        </div>
+        
+        <div class="tab-content active" id="clicker-tab">
+            <div id="score">0 очков</div>
+            <button id="clickButton">КЛИК!</button>
+            <div class="stats-container">
+                <div class="stat">
+                    <span class="stat-name">Очков за клик:</span>
+                    <span class="stat-value" id="perClickStat">1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Очков в секунду:</span>
+                    <span class="stat-value" id="perSecondStat">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Множитель очков:</span>
+                    <span class="stat-value" id="multiplierStat">1x</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="upgrades-tab">
+            <h2>Улучшения</h2>
+            <div class="upgrades-container">
+                <!-- Базовые улучшения -->
+                <div class="upgrade">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Усиленный палец</span>
+                        <span class="upgrade-cost">100</span>
+                    </div>
+                    <div class="upgrade-desc">+1 очко за каждый клик</div>
+                    <button class="upgrade-btn" id="clickPower1">Купить</button>
+                </div>
+                
+                <div class="upgrade">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Золотой палец</span>
+                        <span class="upgrade-cost">500</span>
+                    </div>
+                    <div class="upgrade-desc">Удваивает очки за клик</div>
+                    <button class="upgrade-btn" id="clickPower2">Купить</button>
+                </div>
+                
+                <div class="upgrade">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Платиновый палец</span>
+                        <span class="upgrade-cost">2,500</span>
+                    </div>
+                    <div class="upgrade-desc">Утраивает очки за клик</div>
+                    <button class="upgrade-btn" id="clickPower3">Купить</button>
+                </div>
+                
+                <!-- Автокликеры -->
+                <div class="upgrade">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Автокликер I</span>
+                        <span class="upgrade-cost">250</span>
+                    </div>
+                    <div class="upgrade-desc">Автоматически кликает 1 раз в секунду</div>
+                    <button class="upgrade-btn" id="autoClicker1">Купить</button>
+                </div>
+                
+                <div class="upgrade">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Автокликер II</span>
+                        <span class="upgrade-cost">1,250</span>
+                    </div>
+                    <div class="upgrade-desc">Автоматически кликает 2 раза в секунду</div>
+                    <button class="upgrade-btn" id="autoClicker2">Купить</button>
+                </div>
+                
+                <div class="upgrade">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">Автокликер III</span>
+                        <span class="upgrade-cost">6,250</span>
+                    </div>
+                    <div class="upgrade-desc">Автоматически кликает 5 раз в секунду</div>
+                    <button class="upgrade-btn" id="autoClicker3">Купить</button>
+                </div>
+                
+              
