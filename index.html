@@ -665,4 +665,860 @@
                     <button class="upgrade-btn" id="autoClicker3">Купить</button>
                 </div>
                 
-              
+                <!-- Премиум улучшения -->
+                <div class="upgrade premium">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name premium">Клик-шторм</span>
+                        <span class="upgrade-cost premium">25,000</span>
+                    </div>
+                    <div class="upgrade-desc">Автокликеры работают в 2 раза быстрее</div>
+                    <div class="premium-progress">
+                        <div class="premium-progress-bar" id="clickStormProgress"></div>
+                    </div>
+                    <button class="upgrade-btn premium" id="clickStorm">Купить</button>
+                </div>
+                
+                <div class="upgrade premium">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name premium">Критический удар</span>
+                        <span class="upgrade-cost premium">15,000</span>
+                    </div>
+                    <div class="upgrade-desc">10% шанс получить 5x очков за клик</div>
+                    <div class="premium-progress">
+                        <div class="premium-progress-bar" id="criticalHitProgress"></div>
+                    </div>
+                    <button class="upgrade-btn premium" id="criticalHit">Купить</button>
+                </div>
+                
+                <div class="upgrade premium">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name premium">Золотая лихорадка</span>
+                        <span class="upgrade-cost premium">50,000</span>
+                    </div>
+                    <div class="upgrade-desc">Все очки увеличиваются на 25%</div>
+                    <div class="premium-progress">
+                        <div class="premium-progress-bar" id="goldRushProgress"></div>
+                    </div>
+                    <button class="upgrade-btn premium" id="goldRush">Купить</button>
+                </div>
+                
+                <div class="upgrade premium">
+                    <div class="upgrade-header">
+                        <span class="upgrade-name premium">Бесконечный клик</span>
+                        <span class="upgrade-cost premium">100,000</span>
+                    </div>
+                    <div class="upgrade-desc">Автокликеры работают в 10 раз быстрее</div>
+                    <div class="premium-progress">
+                        <div class="premium-progress-bar" id="infinityClickProgress"></div>
+                    </div>
+                    <button class="upgrade-btn premium" id="infinityClick">Купить</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="stats-tab">
+            <h2>Статистика</h2>
+            <div class="stats-container">
+                <div class="stat">
+                    <span class="stat-name">Всего очков:</span>
+                    <span class="stat-value" id="totalPoints">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Всего кликов:</span>
+                    <span class="stat-value" id="totalClicks">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Очков с кликов:</span>
+                    <span class="stat-value" id="pointsFromClicks">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Очков автоматически:</span>
+                    <span class="stat-value" id="pointsFromAuto">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Критических ударов:</span>
+                    <span class="stat-value" id="criticalHits">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Время игры:</span>
+                    <span class="stat-value" id="playTime">0:00</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Общий множитель:</span>
+                    <span class="stat-value" id="totalMultiplier">1x</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="settings-tab">
+            <h2>Настройки</h2>
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3>Цветовая тема</h3>
+                    <div class="color-options">
+                        <div class="color-option selected" data-color="purple" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);"></div>
+                        <div class="color-option" data-color="blue" style="background: linear-gradient(135deg, #3498db, #2980b9);"></div>
+                        <div class="color-option" data-color="green" style="background: linear-gradient(135deg, #2ecc71, #27ae60);"></div>
+                        <div class="color-option" data-color="red" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+                        <div class="color-option" data-color="orange" style="background: linear-gradient(135deg, #e67e22, #d35400);"></div>
+                        <div class="color-option" data-color="pink" style="background: linear-gradient(135deg, #e84393, #fd79a8);"></div>
+                        <div class="color-option" data-color="teal" style="background: linear-gradient(135deg, #1abc9c, #16a085);"></div>
+                        <div class="color-option" data-color="yellow" style="background: linear-gradient(135deg, #f1c40f, #f39c12);"></div>
+                        <div class="color-option" data-color="indigo" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);"></div>
+                        <div class="color-option" data-color="cyan" style="background: linear-gradient(135deg, #00cec9, #0984e3);"></div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Язык</h3>
+                    <div class="language-options">
+                        <button class="language-btn active" data-lang="ru">Русский</button>
+                        <button class="language-btn" data-lang="en">English</button>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Управление игрой</h3>
+                    <div class="stat">
+                        <span class="stat-name">Автосохранение:</span>
+                        <span class="stat-value" id="lastSave">Никогда</span>
+                    </div>
+                    <button class="reset-btn" id="resetProgress">Сбросить прогресс</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Панель для ввода чит-кодов -->
+    <div class="cheat-panel" id="cheatPanel">
+        <span class="cheat-close" id="cheatClose">&times;</span>
+        <h3 id="cheatTitle">Введите чит-код</h3>
+        <input type="text" class="cheat-input" id="cheatInput" placeholder="Введите код...">
+        <button class="cheat-submit" id="cheatSubmit">Применить</button>
+        <p id="cheatMessage" class="cheat-message"></p>
+    </div>
+
+    <script>
+        // Запрет масштабирования жестами
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        // Инициализация Telegram WebApp и открытие на весь экран
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        
+        // Локализация
+        const translations = {
+            ru: {
+                clicker: "Кликер",
+                upgrades: "Улучшения",
+                stats: "Статистика",
+                settings: "Настройки",
+                clickButton: "КЛИК!",
+                perClick: "Очков за клик:",
+                perSecond: "Очков в секунду:",
+                multiplier: "Множитель очков:",
+                totalPoints: "Всего очков:",
+                totalClicks: "Всего кликов:",
+                pointsFromClicks: "Очков с кликов:",
+                pointsFromAuto: "Очков автоматически:",
+                criticalHits: "Критических ударов:",
+                playTime: "Время игры:",
+                totalMultiplier: "Общий множитель:",
+                settingsTitle: "Настройки",
+                colorTheme: "Цветовая тема",
+                language: "Язык",
+                gameManagement: "Управление игрой",
+                resetProgress: "Сбросить прогресс",
+                autoSave: "Автосохранение:",
+                never: "Никогда",
+                cheatTitle: "Введите чит-код",
+                cheatPlaceholder: "Введите код...",
+                cheatSubmit: "Применить",
+                cheatSuccess: "Чит-код активирован!",
+                cheatError: "Неверный чит-код",
+                resetConfirm: "Вы уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.",
+                resetSuccess: "Прогресс успешно сброшен!",
+                bought: "Куплено",
+                activated: "Активировано!"
+            },
+            en: {
+                clicker: "Clicker",
+                upgrades: "Upgrades",
+                stats: "Statistics",
+                settings: "Settings",
+                clickButton: "CLICK!",
+                perClick: "Points per click:",
+                perSecond: "Points per second:",
+                multiplier: "Points multiplier:",
+                totalPoints: "Total points:",
+                totalClicks: "Total clicks:",
+                pointsFromClicks: "Points from clicks:",
+                pointsFromAuto: "Points from auto:",
+                criticalHits: "Critical hits:",
+                playTime: "Play time:",
+                totalMultiplier: "Total multiplier:",
+                settingsTitle: "Settings",
+                colorTheme: "Color theme",
+                language: "Language",
+                gameManagement: "Game management",
+                resetProgress: "Reset progress",
+                autoSave: "Auto-save:",
+                never: "Never",
+                cheatTitle: "Enter cheat code",
+                cheatPlaceholder: "Enter code...",
+                cheatSubmit: "Apply",
+                cheatSuccess: "Cheat code activated!",
+                cheatError: "Invalid cheat code",
+                resetConfirm: "Are you sure you want to reset all progress? This action cannot be undone.",
+                resetSuccess: "Progress successfully reset!",
+                bought: "Bought",
+                activated: "Activated!"
+            }
+        };
+        
+        // Цветовые схемы
+        const colorSchemes = {
+            purple: { primary: '#8e44ad', secondary: '#9b59b6', accent: '#e74c3c' },
+            blue: { primary: '#3498db', secondary: '#2980b9', accent: '#e74c3c' },
+            green: { primary: '#2ecc71', secondary: '#27ae60', accent: '#e74c3c' },
+            red: { primary: '#e74c3c', secondary: '#c0392b', accent: '#3498db' },
+            orange: { primary: '#e67e22', secondary: '#d35400', accent: '#3498db' },
+            pink: { primary: '#e84393', secondary: '#fd79a8', accent: '#3498db' },
+            teal: { primary: '#1abc9c', secondary: '#16a085', accent: '#e74c3c' },
+            yellow: { primary: '#f1c40f', secondary: '#f39c12', accent: '#e74c3c' },
+            indigo: { primary: '#9b59b6', secondary: '#8e44ad', accent: '#e74c3c' },
+            cyan: { primary: '#00cec9', secondary: '#0984e3', accent: '#e74c3c' }
+        };
+        
+        // Чит-коды
+        const cheatCodes = {
+            "GIVEME1000": (game) => { game.score += 1000; game.totalPoints += 1000; },
+            "UNLIMITED": (game) => { game.score += 1000000; game.totalPoints += 1000000; },
+            "MAXUPGRADES": (game) => {
+                Object.keys(game.upgrades).forEach(id => {
+                    if (id in premiumUpgrades) {
+                        game.upgrades[id].progress = premiumUpgrades[id].maxProgress;
+                        premiumUpgrades[id].effect();
+                    } else {
+                        game.upgrades[id].owned = true;
+                        upgrades[id].effect();
+                    }
+                });
+            },
+            "RESETME": (game) => { resetProgress(); },
+            "SPEEDUP": (game) => { game.autoClickPower *= 5; game.globalMultiplier *= 2; }
+        };
+        
+        // Игровые переменные
+        let gameState = {
+            score: 0,
+            totalClicks: 0,
+            pointsFromClicks: 0,
+            pointsFromAuto: 0,
+            criticalHits: 0,
+            playTime: 0,
+            totalPoints: 0,
+            clickPower: 1,
+            autoClickers: 0,
+            autoClickPower: 1,
+            globalMultiplier: 1,
+            colorScheme: 'purple',
+            language: 'ru',
+            upgrades: {
+                clickPower1: { owned: false },
+                clickPower2: { owned: false },
+                clickPower3: { owned: false },
+                autoClicker1: { owned: false },
+                autoClicker2: { owned: false },
+                autoClicker3: { owned: false },
+                clickStorm: { progress: 0 },
+                criticalHit: { progress: 0 },
+                goldRush: { progress: 0 },
+                infinityClick: { progress: 0 }
+            }
+        };
+        
+        // Загрузка сохраненной игры
+        function loadGame() {
+            const savedGame = localStorage.getItem('laBertoClicker');
+            if (savedGame) {
+                try {
+                    const parsed = JSON.parse(savedGame);
+                    Object.assign(gameState, parsed);
+                    
+                    // Обновляем время последнего сохранения
+                    updateLastSaveTime();
+                    
+                    // Применяем цветовую схему
+                    applyColorScheme(gameState.colorScheme);
+                    
+                    // Применяем язык
+                    applyLanguage(gameState.language);
+                    
+                    return true;
+                } catch (e) {
+                    console.error('Ошибка загрузки сохранения:', e);
+                    return false;
+                }
+            }
+            return false;
+        }
+        
+        // Сохранение игры
+        function saveGame() {
+            try {
+                localStorage.setItem('laBertoClicker', JSON.stringify(gameState));
+                updateLastSaveTime();
+                return true;
+            } catch (e) {
+                console.error('Ошибка сохранения:', e);
+                return false;
+            }
+        }
+        
+        // Обновление времени последнего сохранения
+        function updateLastSaveTime() {
+            const lastSaveElement = document.getElementById('lastSave');
+            if (lastSaveElement) {
+                const now = new Date();
+                lastSaveElement.textContent = now.toLocaleTimeString();
+            }
+        }
+        
+        // Сброс прогресса
+        function resetProgress() {
+            if (confirm(gameState.language === 'ru' ? translations.ru.resetConfirm : translations.en.resetConfirm)) {
+                gameState = {
+                    score: 0,
+                    totalClicks: 0,
+                    pointsFromClicks: 0,
+                    pointsFromAuto: 0,
+                    criticalHits: 0,
+                    playTime: 0,
+                    totalPoints: 0,
+                    clickPower: 1,
+                    autoClickers: 0,
+                    autoClickPower: 1,
+                    globalMultiplier: 1,
+                    colorScheme: 'purple',
+                    language: gameState.language,
+                    upgrades: {
+                        clickPower1: { owned: false },
+                        clickPower2: { owned: false },
+                        clickPower3: { owned: false },
+                        autoClicker1: { owned: false },
+                        autoClicker2: { owned: false },
+                        autoClicker3: { owned: false },
+                        clickStorm: { progress: 0 },
+                        criticalHit: { progress: 0 },
+                        goldRush: { progress: 0 },
+                        infinityClick: { progress: 0 }
+                    }
+                };
+                
+                // Сбрасываем выбранный цвет
+                document.querySelectorAll('.color-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.dataset.color === 'purple') {
+                        option.classList.add('selected');
+                    }
+                });
+                
+                applyColorScheme('purple');
+                saveGame();
+                updateUI();
+                
+                // Показываем сообщение об успешном сбросе
+                alert(gameState.language === 'ru' ? translations.ru.resetSuccess : translations.en.resetSuccess);
+            }
+        }
+        
+        // Применение цветовой схемы
+        function applyColorScheme(scheme) {
+            const colors = colorSchemes[scheme];
+            if (!colors) return;
+            
+            document.documentElement.style.setProperty('--primary', colors.primary);
+            document.documentElement.style.setProperty('--secondary', colors.secondary);
+            document.documentElement.style.setProperty('--accent', colors.accent);
+            
+            gameState.colorScheme = scheme;
+            saveGame();
+        }
+        
+        // Применение языка
+        function applyLanguage(lang) {
+            gameState.language = lang;
+            const t = translations[lang];
+            
+            // Обновляем текст вкладок
+            document.querySelector('[data-tab="clicker"]').textContent = t.clicker;
+            document.querySelector('[data-tab="upgrades"]').textContent = t.upgrades;
+            document.querySelector('[data-tab="stats"]').textContent = t.stats;
+            document.querySelector('[data-tab="settings"]').textContent = t.settings;
+            
+            // Обновляем кнопку клика
+            document.getElementById('clickButton').textContent = t.clickButton;
+            
+            // Обновляем статистику
+            document.querySelector('#perClickStat').previousElementSibling.textContent = t.perClick;
+            document.querySelector('#perSecondStat').previousElementSibling.textContent = t.perSecond;
+            document.querySelector('#multiplierStat').previousElementSibling.textContent = t.multiplier;
+            
+            // Обновляем заголовки
+            document.querySelector('#upgrades-tab h2').textContent = t.upgrades;
+            document.querySelector('#stats-tab h2').textContent = t.stats;
+            document.querySelector('#settings-tab h2').textContent = t.settingsTitle;
+            
+            // Обновляем статистику
+            const stats = [
+                { id: 'totalPoints', text: t.totalPoints },
+                { id: 'totalClicks', text: t.totalClicks },
+                { id: 'pointsFromClicks', text: t.pointsFromClicks },
+                { id: 'pointsFromAuto', text: t.pointsFromAuto },
+                { id: 'criticalHits', text: t.criticalHits },
+                { id: 'playTime', text: t.playTime },
+                { id: 'totalMultiplier', text: t.totalMultiplier }
+            ];
+            
+            stats.forEach(stat => {
+                const element = document.getElementById(stat.id);
+                if (element) {
+                    element.previousElementSibling.textContent = stat.text;
+                }
+            });
+            
+            // Обновляем настройки
+            document.querySelector('#settings-tab h3:nth-of-type(1)').textContent = t.colorTheme;
+            document.querySelector('#settings-tab h3:nth-of-type(2)').textContent = t.language;
+            document.querySelector('#settings-tab h3:nth-of-type(3)').textContent = t.gameManagement;
+            document.getElementById('resetProgress').textContent = t.resetProgress;
+            document.querySelector('#lastSave').previousElementSibling.textContent = t.autoSave;
+            
+            // Обновляем чит-панель
+            document.getElementById('cheatTitle').textContent = t.cheatTitle;
+            document.getElementById('cheatInput').placeholder = t.cheatPlaceholder;
+            document.getElementById('cheatSubmit').textContent = t.cheatSubmit;
+            
+            // Обновляем кнопки языка
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Обновляем кнопки улучшений
+            Object.keys(gameState.upgrades).forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    if (id in premiumUpgrades) {
+                        if (gameState.upgrades[id].progress >= premiumUpgrades[id].maxProgress) {
+                            btn.textContent = t.activated;
+                        }
+                    } else if (gameState.upgrades[id].owned) {
+                        btn.textContent = t.bought;
+                    }
+                }
+            });
+            
+            saveGame();
+        }
+        
+        // Премиум улучшения
+        const premiumUpgrades = {
+            clickStorm: { 
+                cost: 25000, 
+                maxProgress: 100, 
+                effect: () => { gameState.autoClickPower *= 2; gameState.globalMultiplier *= 1.1; },
+                progressElement: null
+            },
+            criticalHit: { 
+                cost: 15000, 
+                maxProgress: 100, 
+                effect: () => { gameState.globalMultiplier *= 1.2; },
+                progressElement: null
+            },
+            goldRush: { 
+                cost: 50000, 
+                maxProgress: 100, 
+                effect: () => { gameState.globalMultiplier *= 1.25; },
+                progressElement: null
+            },
+            infinityClick: { 
+                cost: 100000, 
+                maxProgress: 100, 
+                effect: () => { gameState.autoClickPower *= 10; gameState.globalMultiplier *= 1.5; },
+                progressElement: null
+            }
+        };
+        
+        // Улучшения
+        const upgrades = {
+            clickPower1: { cost: 100, effect: () => { gameState.clickPower += 1; } },
+            clickPower2: { cost: 500, effect: () => { gameState.clickPower *= 2; } },
+            clickPower3: { cost: 2500, effect: () => { gameState.clickPower *= 3; } },
+            autoClicker1: { cost: 250, effect: () => { gameState.autoClickers += 1; } },
+            autoClicker2: { cost: 1250, effect: () => { gameState.autoClickers += 2; } },
+            autoClicker3: { cost: 6250, effect: () => { gameState.autoClickers += 5; } },
+            ...premiumUpgrades
+        };
+        
+        // Элементы интерфейса
+        const scoreElement = document.getElementById('score');
+        const clickButton = document.getElementById('clickButton');
+        const perClickStat = document.getElementById('perClickStat');
+        const perSecondStat = document.getElementById('perSecondStat');
+        const multiplierStat = document.getElementById('multiplierStat');
+        const totalMultiplierElement = document.getElementById('totalMultiplier');
+        const totalPointsElement = document.getElementById('totalPoints');
+        const totalClicksElement = document.getElementById('totalClicks');
+        const pointsFromClicksElement = document.getElementById('pointsFromClicks');
+        const pointsFromAutoElement = document.getElementById('pointsFromAuto');
+        const criticalHitsElement = document.getElementById('criticalHits');
+        const playTimeElement = document.getElementById('playTime');
+        
+        // Чит-панель элементы
+        const cheatPanel = document.getElementById('cheatPanel');
+        const cheatClose = document.getElementById('cheatClose');
+        const cheatInput = document.getElementById('cheatInput');
+        const cheatSubmit = document.getElementById('cheatSubmit');
+        const cheatMessage = document.getElementById('cheatMessage');
+        
+        // Инициализация прогресс баров премиум улучшений
+        premiumUpgrades.clickStorm.progressElement = document.getElementById('clickStormProgress');
+        premiumUpgrades.criticalHit.progressElement = document.getElementById('criticalHitProgress');
+        premiumUpgrades.goldRush.progressElement = document.getElementById('goldRushProgress');
+        premiumUpgrades.infinityClick.progressElement = document.getElementById('infinityClickProgress');
+        
+        // Табы
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const tabContent = document.getElementById(`${tab.dataset.tab}-tab`);
+                tabContent.classList.add('active');
+                
+                // Анимация при переключении вкладок
+                tabContent.style.animation = 'none';
+                setTimeout(() => {
+                    tabContent.style.animation = 'fadeIn 0.3s ease-out';
+                }, 10);
+            });
+        });
+        
+        // Выбор цвета
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+                applyColorScheme(option.dataset.color);
+            });
+        });
+        
+        // Выбор языка
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.language-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+                applyLanguage(btn.dataset.lang);
+            });
+        });
+        
+        // Сброс прогресса
+        document.getElementById('resetProgress').addEventListener('click', resetProgress);
+        
+        // Основной клик
+        clickButton.addEventListener('click', (e) => {
+            // Создаем эффект клика
+            createClickEffect(e);
+            
+            gameState.totalClicks++;
+            let points = gameState.clickPower;
+            
+            // Проверка на критический удар
+            if (gameState.upgrades.criticalHit.progress >= premiumUpgrades.criticalHit.maxProgress && Math.random() < 0.1) {
+                points *= 5;
+                gameState.criticalHits++;
+                // Анимация для критического удара
+                scoreElement.style.animation = 'none';
+                setTimeout(() => {
+                    scoreElement.style.animation = 'bounce 0.5s';
+                }, 10);
+            }
+            
+            // Применяем глобальный множитель
+            points = Math.floor(points * gameState.globalMultiplier);
+            
+            gameState.score += points;
+            gameState.pointsFromClicks += points;
+            gameState.totalPoints += points;
+            updateUI();
+            saveGame();
+            
+            // Анимация кнопки
+            clickButton.style.animation = 'none';
+            setTimeout(() => {
+                clickButton.style.animation = 'pulse 2s infinite';
+            }, 100);
+        });
+        
+        // Клик по букве ä в заголовке для открытия чит-панели
+        document.querySelector('.header h1').addEventListener('click', (e) => {
+            if (e.target.textContent.includes('ä') || e.target.textContent.includes('a')) {
+                cheatPanel.style.display = 'block';
+                cheatInput.focus();
+            }
+        });
+        
+        // Закрытие чит-панели
+        cheatClose.addEventListener('click', () => {
+            cheatPanel.style.display = 'none';
+            cheatMessage.textContent = '';
+            cheatMessage.className = 'cheat-message';
+        });
+        
+        // Применение чит-кода
+        cheatSubmit.addEventListener('click', () => {
+            const code = cheatInput.value.trim().toUpperCase();
+            if (cheatCodes[code]) {
+                cheatCodes[code](gameState);
+                cheatMessage.textContent = gameState.language === 'ru' ? translations.ru.cheatSuccess : translations.en.cheatSuccess;
+                cheatMessage.className = 'cheat-message cheat-success';
+                updateUI();
+                saveGame();
+                
+                // Автоматически закрываем через 2 секунды
+                setTimeout(() => {
+                    cheatPanel.style.display = 'none';
+                    cheatMessage.textContent = '';
+                    cheatMessage.className = 'cheat-message';
+                }, 2000);
+            } else {
+                cheatMessage.textContent = gameState.language === 'ru' ? translations.ru.cheatError : translations.en.cheatError;
+                cheatMessage.className = 'cheat-message cheat-error';
+            }
+            cheatInput.value = '';
+        });
+        
+        // Обработка нажатия Enter в поле ввода чит-кода
+        cheatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                cheatSubmit.click();
+            }
+        });
+        
+        // Функция создания эффекта клика
+        function createClickEffect(e) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.style.left = `${e.clientX}px`;
+            effect.style.top = `${e.clientY}px`;
+            document.body.appendChild(effect);
+            
+            // Удаляем эффект после анимации
+            setTimeout(() => {
+                effect.remove();
+            }, 800);
+        }
+        
+        // Покупка улучшений
+        Object.keys(upgrades).forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const upgrade = upgrades[id];
+                    
+                    // Для премиум улучшений
+                    if (id in premiumUpgrades) {
+                        const progress = gameState.upgrades[id].progress || 0;
+                        if (gameState.score >= upgrade.cost && progress < upgrade.maxProgress) {
+                            gameState.score -= upgrade.cost;
+                            gameState.upgrades[id].progress = progress + 1;
+                            updatePremiumProgress(id);
+                            
+                            // Анимация при покупке улучшения
+                            btn.parentElement.style.animation = 'none';
+                            setTimeout(() => {
+                                btn.parentElement.style.animation = 'bounce 0.5s';
+                            }, 10);
+                            
+                            // Если достигнут максимум - активируем эффект
+                            if (gameState.upgrades[id].progress >= upgrade.maxProgress) {
+                                upgrade.effect();
+                                btn.disabled = true;
+                                btn.textContent = gameState.language === 'ru' ? translations.ru.activated : translations.en.activated;
+                            }
+                            
+                            updateUI();
+                            saveGame();
+                        }
+                    } 
+                    // Для обычных улучшений
+                    else if (!gameState.upgrades[id].owned && gameState.score >= upgrade.cost) {
+                        gameState.score -= upgrade.cost;
+                        gameState.upgrades[id].owned = true;
+                        upgrade.effect();
+                        btn.disabled = true;
+                        btn.textContent = gameState.language === 'ru' ? translations.ru.bought : translations.en.bought;
+                        
+                        // Анимация при покупке улучшения
+                        btn.parentElement.style.animation = 'none';
+                        setTimeout(() => {
+                            btn.parentElement.style.animation = 'bounce 0.5s';
+                        }, 10);
+                        
+                        updateUI();
+                        saveGame();
+                    }
+                });
+            }
+        });
+        
+        // Обновление прогресса премиум улучшений
+        function updatePremiumProgress(id) {
+            const upgrade = premiumUpgrades[id];
+            const progress = gameState.upgrades[id].progress || 0;
+            const progressPercent = (progress / upgrade.maxProgress) * 100;
+            upgrade.progressElement.style.width = `${progressPercent}%`;
+            
+            // Обновляем текст кнопки
+            const btn = document.getElementById(id);
+            if (progress < upgrade.maxProgress) {
+                btn.textContent = `${gameState.language === 'ru' ? 'Улучшить' : 'Upgrade'} (${progress}/${upgrade.maxProgress})`;
+            }
+        }
+        
+        // Автокликеры
+        setInterval(() => {
+            if (gameState.autoClickers > 0) {
+                let points = gameState.autoClickers * gameState.autoClickPower;
+                
+                // Применяем глобальный множитель
+                points = Math.floor(points * gameState.globalMultiplier);
+                
+                // Учет золотой лихорадки
+                if (gameState.upgrades.goldRush.progress >= premiumUpgrades.goldRush.maxProgress) {
+                    points = Math.floor(points * 1.25);
+                }
+                
+                gameState.score += points;
+                gameState.pointsFromAuto += points;
+                gameState.totalPoints += points;
+                updateUI();
+                
+                // Автосохранение каждые 10 секунд
+                if (gameState.playTime % 10 === 0) {
+                    saveGame();
+                }
+            }
+        }, gameState.upgrades.clickStorm.progress >= premiumUpgrades.clickStorm.maxProgress ? 500 : 1000);
+        
+        // Таймер игры
+        setInterval(() => {
+            gameState.playTime++;
+            const minutes = Math.floor(gameState.playTime / 60);
+            const seconds = gameState.playTime % 60;
+            playTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+        
+        // Обновление интерфейса
+        function updateUI() {
+            // Форматируем числа с разделителями тысяч
+            const formatNumber = num => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            scoreElement.textContent = `${formatNumber(gameState.score)} ${gameState.language === 'ru' ? 'очков' : 'points'}`;
+            perClickStat.textContent = formatNumber(Math.floor(gameState.clickPower * gameState.globalMultiplier));
+            perSecondStat.textContent = formatNumber(Math.floor(gameState.autoClickers * gameState.autoClickPower * gameState.globalMultiplier));
+            multiplierStat.textContent = `${gameState.globalMultiplier.toFixed(1)}x`;
+            totalMultiplierElement.textContent = `${gameState.globalMultiplier.toFixed(1)}x`;
+            
+            totalPointsElement.textContent = formatNumber(gameState.pointsFromClicks + gameState.pointsFromAuto);
+            totalClicksElement.textContent = formatNumber(gameState.totalClicks);
+            pointsFromClicksElement.textContent = formatNumber(gameState.pointsFromClicks);
+            pointsFromAutoElement.textContent = formatNumber(gameState.pointsFromAuto);
+            criticalHitsElement.textContent = formatNumber(gameState.criticalHits);
+            
+            // Обновляем доступность улучшений
+            Object.keys(upgrades).forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    // Для премиум улучшений
+                    if (id in premiumUpgrades) {
+                        const progress = gameState.upgrades[id].progress || 0;
+                        btn.disabled = gameState.score < upgrades[id].cost || progress >= premiumUpgrades[id].maxProgress;
+                    } 
+                    // Для обычных улучшений
+                    else if (!gameState.upgrades[id].owned) {
+                        btn.disabled = gameState.score < upgrades[id].cost;
+                    }
+                }
+            });
+        }
+        
+        // Кнопка закрытия
+        tg.MainButton.setText(gameState.language === 'ru' ? "Закрыть игру" : "Close game");
+        tg.MainButton.show();
+        tg.MainButton.onClick(() => {
+            saveGame();
+            tg.close();
+        });
+        
+        // Инициализация игры
+        function initGame() {
+            // Загружаем сохраненную игру
+            const loaded = loadGame();
+            
+            // Если игра не загружена, применяем стандартные настройки
+            if (!loaded) {
+                applyColorScheme('purple');
+                applyLanguage('ru');
+            }
+            
+            // Обновляем интерфейс
+            updateUI();
+            
+            // Восстанавливаем выбранный цвет
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.color === gameState.colorScheme) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // Восстанавливаем состояние улучшений
+            Object.keys(gameState.upgrades).forEach(id => {
+                if (id in premiumUpgrades) {
+                    updatePremiumProgress(id);
+                    const btn = document.getElementById(id);
+                    if (btn && gameState.upgrades[id].progress >= premiumUpgrades[id].maxProgress) {
+                        btn.disabled = true;
+                        btn.textContent = gameState.language === 'ru' ? translations.ru.activated : translations.en.activated;
+                    }
+                } else {
+                    const btn = document.getElementById(id);
+                    if (btn && gameState.upgrades[id].owned) {
+                        btn.disabled = true;
+                        btn.textContent = gameState.language === 'ru' ? translations.ru.bought : translations.en.bought;
+                    }
+                }
+            });
+        }
+        
+        // Запускаем игру
+        initGame();
+    </script>
+</body>
+</html>
