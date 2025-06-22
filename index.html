@@ -48,6 +48,8 @@
             --border: #e0e0e0;
             --stat-bg: #ffffff;
             --reset-btn: #e74c3c;
+            --owned-bg: #f0f0f0;
+            --owned-text: #888;
         }
         
         @media (prefers-color-scheme: dark) {
@@ -58,6 +60,8 @@
                 --border: #333333;
                 --stat-bg: #252525;
                 --reset-btn: #c0392b;
+                --owned-bg: #2a2a2a;
+                --owned-text: #666;
             }
         }
 
@@ -105,11 +109,22 @@
             transition: all 0.3s;
             font-size: clamp(0.8rem, 3vw, 1rem);
             color: var(--text);
+            position: relative;
         }
         
         .tab.active {
-            border-bottom: 3px solid var(--primary);
             color: var(--primary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
         }
         
         .tab-content {
@@ -168,6 +183,26 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             text-align: left;
             transition: all 0.3s;
+        }
+        
+        .upgrade.owned {
+            background: var(--owned-bg);
+            opacity: 0.8;
+            order: 1;
+        }
+        
+        .upgrade.owned .upgrade-name {
+            color: var(--owned-text);
+        }
+        
+        .upgrade.owned .upgrade-desc {
+            color: var(--owned-text);
+        }
+        
+        .upgrade.owned .upgrade-btn {
+            background: var(--owned-bg);
+            color: var(--owned-text);
+            border: 1px solid var(--owned-text);
         }
         
         .upgrade.premium {
@@ -335,6 +370,87 @@
             margin-top: 15px;
         }
         
+        .cheat-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cheat-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .cheat-title {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .cheat-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 16px;
+            background: var(--bg);
+            color: var(--text);
+        }
+        
+        .cheat-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .cheat-button {
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+        }
+        
+        .cheat-button:active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .cheat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cheat-submit {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+        }
+        
+        .cheat-cancel {
+            flex: 1;
+            background: var(--reset-btn);
+            color: white;
+        }
+        
+        .special-upgrade {
+            border: 2px dashed var(--primary);
+        }
+        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -360,6 +476,11 @@
             71% { color: #4b0082; }
             85% { color: #9400d3; }
             100% { color: #ff0000; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
         
         @media (max-width: 350px) {
@@ -422,13 +543,36 @@
         </div>
     </div>
 
+    <div class="cheat-container" id="cheatContainer">
+        <div class="cheat-box">
+            <h3 class="cheat-title">Введите промокод</h3>
+            <input type="text" class="cheat-input" id="cheatInput" placeholder="Промокод" readonly>
+            <div class="cheat-buttons">
+                <button class="cheat-button" data-number="1">1</button>
+                <button class="cheat-button" data-number="2">2</button>
+                <button class="cheat-button" data-number="3">3</button>
+                <button class="cheat-button" data-number="4">4</button>
+                <button class="cheat-button" data-number="5">5</button>
+                <button class="cheat-button" data-number="6">6</button>
+                <button class="cheat-button" data-number="7">7</button>
+                <button class="cheat-button" data-number="8">8</button>
+                <button class="cheat-button" data-number="9">9</button>
+                <button class="cheat-button" data-number="0">0</button>
+                <button class="cheat-button" id="cheatBackspace">⌫</button>
+                <button class="cheat-button" id="cheatClear">C</button>
+            </div>
+            <div class="cheat-actions">
+                <button class="cheat-submit" id="cheatSubmit">Применить</button>
+                <button class="cheat-cancel" id="cheatCancel">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // Локализация
         const translations = {
             ru: {
                 clicker: "Кликер", upgrades: "Улучшения", stats: "Статистика", settings: "Настройки",
@@ -437,14 +581,14 @@
                 totalPoints: "Всего очков:", totalClicks: "Всего кликов:", pointsFromClicks: "Очков с кликов:",
                 pointsFromAuto: "Очков автоматически:", criticalHits: "Критических ударов:", playTime: "Время игры:",
                 totalMultiplier: "Общий множитель:", settingsTitle: "Настройки", colorTheme: "Цветовая тема",
-                gameManagement: "Управление игрой", resetProgress: "Сбросить прогресс",
-                autoSave: "Автосохранение:", never: "Никогда",
+                gameManagement: "Управление игрой", resetProgress: "Сбросить прогресс", enterCheat: "Ввести промокод",
+                autoSave: "Автосохранение:", never: "Никогда", cheatSuccess: "Промокод активирован!",
+                cheatInvalid: "Неверный промокод", cheatUsed: "Этот промокод уже использован",
                 resetConfirm: "Вы уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.",
                 resetSuccess: "Прогресс успешно сброшен!"
             }
         };
         
-        // Цветовые схемы
         const colorSchemes = {
             purple: { primary: '#8e44ad', secondary: '#9b59b6', accent: '#e74c3c' },
             blue: { primary: '#3498db', secondary: '#2980b9', accent: '#e74c3c' },
@@ -458,7 +602,22 @@
             cyan: { primary: '#00cec9', secondary: '#0984e3', accent: '#e74c3c' }
         };
         
-        // Игровые переменные
+        const cheats = {
+            '6534': { used: false, effect: () => { gameState.score += 100000; gameState.totalPoints += 100000; } },
+            '0781': { used: false, effect: () => { 
+                gameState.upgrades.specialUpgrade = { owned: true };
+                gameState.globalMultiplier *= 1.5;
+            } }
+        };
+        
+        const specialUpgrades = {
+            specialUpgrade: { 
+                name: "Секретное улучшение", 
+                desc: "Увеличивает множитель очков на 50%", 
+                cost: "Промокод"
+            }
+        };
+        
         let gameState = {
             score: 0, totalClicks: 0, pointsFromClicks: 0, pointsFromAuto: 0, criticalHits: 0,
             playTime: 0, totalPoints: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
@@ -466,11 +625,11 @@
             upgrades: {
                 clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
                 autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
-                clickStorm: { progress: 0 }, criticalHit: { progress: 0 }, goldRush: { progress: 0 }, infinityClick: { progress: 0 }
+                clickStorm: { progress: 0 }, criticalHit: { progress: 0 }, goldRush: { progress: 0 }, infinityClick: { progress: 0 },
+                specialUpgrade: { owned: false }
             }
         };
         
-        // Премиум улучшения
         const premiumUpgrades = {
             clickStorm: { cost: 25000, maxProgress: 100, effect: () => { 
                 gameState.autoClickPower *= 2; gameState.globalMultiplier *= 1.1; 
@@ -486,7 +645,6 @@
             }}
         };
         
-        // Улучшения
         const upgrades = {
             clickPower1: { cost: 100, effect: () => { gameState.clickPower += 1; } },
             clickPower2: { cost: 500, effect: () => { gameState.clickPower *= 2; } },
@@ -497,357 +655,453 @@
             ...premiumUpgrades
         };
         
-        // Элементы DOM
         const DOM = {
             score: document.getElementById('score'),
             clickButton: document.getElementById('clickButton'),
             upgradesList: document.getElementById('upgradesList'),
             statsList: document.getElementById('statsList'),
-            settingsContent: document.getElementById('settingsContent')
+            settingsContent: document.getElementById('settingsContent'),
+            cheatContainer: document.getElementById('cheatContainer'),
+            cheatInput: document.getElementById('cheatInput'),
+            cheatSubmit: document.getElementById('cheatSubmit'),
+            cheatCancel: document.getElementById('cheatCancel'),
+            cheatBackspace: document.getElementById('cheatBackspace'),
+            cheatClear: document.getElementById('cheatClear')
         };
         
-        // Инициализация игры
         function initGame() {
             loadGame();
             setupEventListeners();
             renderAll();
+            startGameLoop();
+            
             tg.MainButton.setText("Закрыть игру");
             tg.MainButton.show();
             tg.MainButton.onClick(() => { saveGame(); tg.close(); });
         }
         
-        // Загрузка/сохранение
-        function loadGame() {
-            const saved = localStorage.getItem('laBertoClicker');
-            if (saved) try {
-                Object.assign(gameState, JSON.parse(saved));
-                applyColorScheme(gameState.colorScheme);
-            } catch(e) { console.error('Load error:', e); }
-        }
-        
-        function saveGame() {
-            try {
-                localStorage.setItem('laBertoClicker', JSON.stringify(gameState));
-                updateLastSaveTime();
-            } catch(e) { console.error('Save error:', e); }
-        }
-        
-        function updateLastSaveTime() {
-            const el = document.getElementById('lastSave');
-            if (el) el.textContent = new Date().toLocaleTimeString('ru-RU');
-        }
-        
-        // Основные функции
-        function applyColorScheme(scheme) {
-            const colors = colorSchemes[scheme];
-            if (!colors) return;
-            
-            document.documentElement.style.setProperty('--primary', colors.primary);
-            document.documentElement.style.setProperty('--secondary', colors.secondary);
-            document.documentElement.style.setProperty('--accent', colors.accent);
-            
-            document.querySelectorAll('.tab.active').forEach(tab => {
-                tab.style.borderBottomColor = colors.primary;
-                tab.style.color = colors.primary;
-            });
-            
-            gameState.colorScheme = scheme;
-            saveGame();
-        }
-        
-        function resetProgress() {
-            if (confirm(translations[gameState.language].resetConfirm)) {
-                gameState = {
-                    ...gameState,
-                    score: 0, totalClicks: 0, pointsFromClicks: 0, pointsFromAuto: 0,
-                    criticalHits: 0, playTime: 0, totalPoints: 0, clickPower: 1,
-                    autoClickers: 0, autoClickPower: 1, globalMultiplier: 1, colorScheme: 'purple',
-                    upgrades: {
-                        clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
-                        autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
-                        clickStorm: { progress: 0 }, criticalHit: { progress: 0 }, goldRush: { progress: 0 }, infinityClick: { progress: 0 }
-                    }
-                };
-                
-                document.querySelectorAll('.color-option').forEach(opt => 
-                    opt.classList.toggle('selected', opt.dataset.color === 'purple'));
-                
-                applyColorScheme('purple');
-                alert(translations[gameState.language].resetSuccess);
-            }
-        }
-        
-        // Рендер интерфейса
-        function renderAll() {
-            renderUpgrades();
-            renderStats();
-            renderSettings();
-            updateUI();
-        }
-        
-        function renderUpgrades() {
-            const t = translations[gameState.language];
-            DOM.upgradesList.innerHTML = `
-                <div class="upgrade">
-                    <div class="upgrade-header"><span class="upgrade-name">Усиленный палец</span><span class="upgrade-cost">100</span></div>
-                    <div class="upgrade-desc">+1 очко за каждый клик</div>
-                    <button class="upgrade-btn" id="clickPower1" ${gameState.upgrades.clickPower1.owned ? 'disabled' : ''}>
-                        ${gameState.upgrades.clickPower1.owned ? t.bought : 'Купить'}
-                    </button>
-                </div>
-                <div class="upgrade">
-                    <div class="upgrade-header"><span class="upgrade-name">Золотой палец</span><span class="upgrade-cost">500</span></div>
-                    <div class="upgrade-desc">Удваивает очки за клик</div>
-                    <button class="upgrade-btn" id="clickPower2" ${gameState.upgrades.clickPower2.owned ? 'disabled' : ''}>
-                        ${gameState.upgrades.clickPower2.owned ? t.bought : 'Купить'}
-                    </button>
-                </div>
-                <div class="upgrade">
-                    <div class="upgrade-header"><span class="upgrade-name">Платиновый палец</span><span class="upgrade-cost">2,500</span></div>
-                    <div class="upgrade-desc">Утраивает очки за клик</div>
-                    <button class="upgrade-btn" id="clickPower3" ${gameState.upgrades.clickPower3.owned ? 'disabled' : ''}>
-                        ${gameState.upgrades.clickPower3.owned ? t.bought : 'Купить'}
-                    </button>
-                </div>
-                <div class="upgrade">
-                    <div class="upgrade-header"><span class="upgrade-name">Автокликер I</span><span class="upgrade-cost">250</span></div>
-                    <div class="upgrade-desc">Автоматически кликает 1 раз в секунду</div>
-                    <button class="upgrade-btn" id="autoClicker1" ${gameState.upgrades.autoClicker1.owned ? 'disabled' : ''}>
-                        ${gameState.upgrades.autoClicker1.owned ? t.bought : 'Купить'}
-                    </button>
-                </div>
-                <div class="upgrade">
-                    <div class="upgrade-header"><span class="upgrade-name">Автокликер II</span><span class="upgrade-cost">1,250</span></div>
-                    <div class="upgrade-desc">Автоматически кликает 2 раза в секунду</div>
-                    <button class="upgrade-btn" id="autoClicker2" ${gameState.upgrades.autoClicker2.owned ? 'disabled' : ''}>
-                        ${gameState.upgrades.autoClicker2.owned ? t.bought : 'Купить'}
-                    </button>
-                </div>
-                <div class="upgrade">
-                    <div class="upgrade-header"><span class="upgrade-name">Автокликер III</span><span class="upgrade-cost">6,250</span></div>
-                    <div class="upgrade-desc">Автоматически кликает 5 раз в секунду</div>
-                    <button class="upgrade-btn" id="autoClicker3" ${gameState.upgrades.autoClicker3.owned ? 'disabled' : ''}>
-                        ${gameState.upgrades.autoClicker3.owned ? t.bought : 'Купить'}
-                    </button>
-                </div>
-                <div class="upgrade premium">
-                    <div class="upgrade-header"><span class="upgrade-name premium">Клик-шторм</span><span class="upgrade-cost premium">25,000</span></div>
-                    <div class="upgrade-desc">Автокликеры работают в 2 раза быстрее</div>
-                    <div class="premium-progress"><div class="premium-progress-bar" id="clickStormProgress" style="width: ${gameState.upgrades.clickStorm.progress}%"></div></div>
-                    <button class="upgrade-btn premium" id="clickStorm" ${gameState.upgrades.clickStorm.progress >= 100 ? 'disabled' : ''}>
-                        ${gameState.upgrades.clickStorm.progress >= 100 ? t.activated : `${t.upgrade} (${gameState.upgrades.clickStorm.progress}/100)`}
-                    </button>
-                </div>
-                <div class="upgrade premium">
-                    <div class="upgrade-header"><span class="upgrade-name premium">Критический удар</span><span class="upgrade-cost premium">15,000</span></div>
-                    <div class="upgrade-desc">10% шанс получить 5x очков за клик</div>
-                    <div class="premium-progress"><div class="premium-progress-bar" id="criticalHitProgress" style="width: ${gameState.upgrades.criticalHit.progress}%"></div></div>
-                    <button class="upgrade-btn premium" id="criticalHit" ${gameState.upgrades.criticalHit.progress >= 100 ? 'disabled' : ''}>
-                        ${gameState.upgrades.criticalHit.progress >= 100 ? t.activated : `${t.upgrade} (${gameState.upgrades.criticalHit.progress}/100)`}
-                    </button>
-                </div>
-                <div class="upgrade premium">
-                    <div class="upgrade-header"><span class="upgrade-name premium">Золотая лихорадка</span><span class="upgrade-cost premium">50,000</span></div>
-                    <div class="upgrade-desc">Все очки увеличиваются на 25%</div>
-                    <div class="premium-progress"><div class="premium-progress-bar" id="goldRushProgress" style="width: ${gameState.upgrades.goldRush.progress}%"></div></div>
-                    <button class="upgrade-btn premium" id="goldRush" ${gameState.upgrades.goldRush.progress >= 100 ? 'disabled' : ''}>
-                        ${gameState.upgrades.goldRush.progress >= 100 ? t.activated : `${t.upgrade} (${gameState.upgrades.goldRush.progress}/100)`}
-                    </button>
-                </div>
-                <div class="upgrade premium">
-                    <div class="upgrade-header"><span class="upgrade-name premium">Бесконечный клик</span><span class="upgrade-cost premium">100,000</span></div>
-                    <div class="upgrade-desc">Автокликеры работают в 10 раз быстрее</div>
-                    <div class="premium-progress"><div class="premium-progress-bar" id="infinityClickProgress" style="width: ${gameState.upgrades.infinityClick.progress}%"></div></div>
-                    <button class="upgrade-btn premium" id="infinityClick" ${gameState.upgrades.infinityClick.progress >= 100 ? 'disabled' : ''}>
-                        ${gameState.upgrades.infinityClick.progress >= 100 ? t.activated : `${t.upgrade} (${gameState.upgrades.infinityClick.progress}/100)`}
-                    </button>
-                </div>
-            `;
-        }
-        
-        function renderStats() {
-            const t = translations[gameState.language];
-            DOM.statsList.innerHTML = `
-                <div class="stat"><span class="stat-name">${t.totalPoints}</span><span class="stat-value" id="totalPoints">${formatNumber(gameState.totalPoints)}</span></div>
-                <div class="stat"><span class="stat-name">${t.totalClicks}</span><span class="stat-value" id="totalClicks">${formatNumber(gameState.totalClicks)}</span></div>
-                <div class="stat"><span class="stat-name">${t.pointsFromClicks}</span><span class="stat-value" id="pointsFromClicks">${formatNumber(gameState.pointsFromClicks)}</span></div>
-                <div class="stat"><span class="stat-name">${t.pointsFromAuto}</span><span class="stat-value" id="pointsFromAuto">${formatNumber(gameState.pointsFromAuto)}</span></div>
-                <div class="stat"><span class="stat-name">${t.criticalHits}</span><span class="stat-value" id="criticalHits">${formatNumber(gameState.criticalHits)}</span></div>
-                <div class="stat"><span class="stat-name">${t.playTime}</span><span class="stat-value" id="playTime">${Math.floor(gameState.playTime/60)}:${(gameState.playTime%60).toString().padStart(2,'0')}</span></div>
-                <div class="stat"><span class="stat-name">${t.totalMultiplier}</span><span class="stat-value" id="totalMultiplier">${gameState.globalMultiplier.toFixed(1)}x</span></div>
-            `;
-        }
-        
-        function renderSettings() {
-            const t = translations[gameState.language];
-            DOM.settingsContent.innerHTML = `
-                <div class="settings-section">
-                    <h3>${t.colorTheme}</h3>
-                    <div class="color-options">
-                        ${Object.keys(colorSchemes).map(color => `
-                            <div class="color-option ${gameState.colorScheme === color ? 'selected' : ''}" 
-                                 data-color="${color}" 
-                                 style="background: linear-gradient(135deg, ${colorSchemes[color].primary}, ${colorSchemes[color].secondary})">
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>${t.gameManagement}</h3>
-                    <div class="stat">
-                        <span class="stat-name">${t.autoSave}</span>
-                        <span class="stat-value" id="lastSave">${t.never}</span>
-                    </div>
-                    <button class="reset-btn" id="resetProgress">${t.resetProgress}</button>
-                </div>
-            `;
-        }
-        
-        function updateUI() {
-            const t = translations[gameState.language];
-            DOM.score.textContent = `${formatNumber(gameState.score)} ${t.points}`;
-            document.getElementById('perClickStat').textContent = formatNumber(Math.floor(gameState.clickPower * gameState.globalMultiplier));
-            document.getElementById('perSecondStat').textContent = formatNumber(Math.floor(gameState.autoClickers * gameState.autoClickPower * gameState.globalMultiplier));
-            document.getElementById('multiplierStat').textContent = `${gameState.globalMultiplier.toFixed(1)}x`;
-            
-            // Обновляем доступность улучшений
-            Object.keys(upgrades).forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) {
-                    if (id in premiumUpgrades) {
-                        const progress = gameState.upgrades[id].progress || 0;
-                        btn.disabled = gameState.score < upgrades[id].cost || progress >= premiumUpgrades[id].maxProgress;
-                    } else {
-                        btn.disabled = gameState.upgrades[id].owned || gameState.score < upgrades[id].cost;
-                    }
-                }
-            });
-        }
-        
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-        }
-        
-        // Обработчики событий
         function setupEventListeners() {
-            // Табы
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
-                    document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
                     tab.classList.add('active');
                     document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
                 });
             });
             
-            // Цветовые схемы
-            document.addEventListener('click', e => {
-                if (e.target.classList.contains('color-option')) {
-                    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
-                    e.target.classList.add('selected');
-                    applyColorScheme(e.target.dataset.color);
-                }
+            DOM.clickButton.addEventListener('click', handleClick);
+            
+            document.querySelectorAll('.cheat-button[data-number]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    DOM.cheatInput.value += btn.dataset.number;
+                });
             });
             
-            // Сброс прогресса
-            document.addEventListener('click', e => {
-                if (e.target.id === 'resetProgress') resetProgress();
+            DOM.cheatBackspace.addEventListener('click', () => {
+                DOM.cheatInput.value = DOM.cheatInput.value.slice(0, -1);
             });
             
-            // Основной клик
-            DOM.clickButton.addEventListener('click', e => {
-                createClickEffect(e);
-                
-                gameState.totalClicks++;
-                let points = gameState.clickPower;
-                
-                if (gameState.upgrades.criticalHit.progress >= 100 && Math.random() < 0.1) {
-                    points *= 5;
-                    gameState.criticalHits++;
-                    DOM.score.style.animation = 'none';
-                    setTimeout(() => DOM.score.style.animation = 'bounce 0.5s', 10);
+            DOM.cheatClear.addEventListener('click', () => {
+                DOM.cheatInput.value = '';
+            });
+            
+            DOM.cheatSubmit.addEventListener('click', () => {
+                applyCheat(DOM.cheatInput.value);
+            });
+            
+            DOM.cheatCancel.addEventListener('click', hideCheatInput);
+        }
+        
+        function startGameLoop() {
+            setInterval(() => {
+                if (gameState.autoClickers > 0) {
+                    const points = gameState.autoClickers * gameState.autoClickPower * gameState.globalMultiplier;
+                    gameState.score += points;
+                    gameState.totalPoints += points;
+                    gameState.pointsFromAuto += points;
+                    updateUI();
                 }
-                
-                points = Math.floor(points * gameState.globalMultiplier);
-                gameState.score += points;
-                gameState.pointsFromClicks += points;
-                gameState.totalPoints += points;
-                
-                updateUI();
+            }, 1000);
+            
+            setInterval(() => {
+                gameState.playTime++;
                 saveGame();
-            });
+            }, 1000);
+        }
+        
+        function handleClick(e) {
+            const clickEffect = document.createElement('div');
+            clickEffect.className = 'click-effect';
+            clickEffect.style.left = `${e.clientX}px`;
+            clickEffect.style.top = `${e.clientY}px`;
+            document.body.appendChild(clickEffect);
             
-            // Покупка улучшений
-            document.addEventListener('click', e => {
-                if (e.target.classList.contains('upgrade-btn') && !e.target.disabled) {
-                    const id = e.target.id;
-                    const upgrade = upgrades[id];
+            setTimeout(() => {
+                clickEffect.remove();
+            }, 800);
+            
+            const isCritical = Math.random() < 0.1;
+            const multiplier = isCritical ? 5 * gameState.globalMultiplier : gameState.globalMultiplier;
+            
+            const points = gameState.clickPower * multiplier;
+            gameState.score += points;
+            gameState.totalPoints += points;
+            gameState.pointsFromClicks += points;
+            gameState.totalClicks++;
+            
+            if (isCritical) {
+                gameState.criticalHits++;
+                DOM.clickButton.style.animation = 'bounce 0.3s';
+                setTimeout(() => {
+                    DOM.clickButton.style.animation = 'pulse 2s infinite';
+                }, 300);
+            }
+            
+            updateUI();
+            saveGame();
+        }
+        
+        function buyUpgrade(id) {
+            const upgrade = upgrades[id];
+            
+            if (premiumUpgrades[id]) {
+                if (gameState.score >= premiumUpgrades[id].cost) {
+                    gameState.score -= premiumUpgrades[id].cost;
+                    gameState.upgrades[id].progress++;
                     
-                    if (gameState.score >= upgrade.cost) {
-                        gameState.score -= upgrade.cost;
-                        
-                        if (id in premiumUpgrades) {
-                            gameState.upgrades[id].progress++;
-                            document.getElementById(`${id}Progress`).style.width = `${gameState.upgrades[id].progress}%`;
-                            
-                            if (gameState.upgrades[id].progress >= premiumUpgrades[id].maxProgress) {
-                                upgrade.effect();
-                                e.target.disabled = true;
-                                e.target.textContent = translations[gameState.language].activated;
-                            } else {
-                                e.target.textContent = `${translations[gameState.language].upgrade} (${gameState.upgrades[id].progress}/100)`;
-                            }
-                        } else {
-                            gameState.upgrades[id].owned = true;
-                            upgrade.effect();
-                            e.target.disabled = true;
-                            e.target.textContent = translations[gameState.language].bought;
-                        }
-                        
-                        updateUI();
-                        saveGame();
+                    if (gameState.upgrades[id].progress >= premiumUpgrades[id].maxProgress) {
+                        premiumUpgrades[id].effect();
                     }
+                    
+                    renderUpgrades();
+                    updateUI();
+                    saveGame();
+                }
+            } else {
+                if (gameState.score >= upgrade.cost && !gameState.upgrades[id].owned) {
+                    gameState.score -= upgrade.cost;
+                    gameState.upgrades[id].owned = true;
+                    upgrade.effect();
+                    
+                    renderUpgrades();
+                    updateUI();
+                    saveGame();
+                }
+            }
+        }
+        
+        function updateUI() {
+            const t = translations[gameState.language];
+            
+            const formatNumber = (num) => {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            
+            DOM.score.textContent = `${formatNumber(Math.floor(gameState.score))} ${t.points}`;
+            
+            document.getElementById('perClickStat').textContent = formatNumber(gameState.clickPower * gameState.globalMultiplier);
+            document.getElementById('perSecondStat').textContent = formatNumber(gameState.autoClickers * gameState.autoClickPower * gameState.globalMultiplier);
+            document.getElementById('multiplierStat').textContent = `${gameState.globalMultiplier.toFixed(1)}x`;
+            
+            document.querySelectorAll('.upgrade-btn').forEach(btn => {
+                if (btn.id && upgrades[btn.id]) {
+                    const cost = premiumUpgrades[btn.id] ? premiumUpgrades[btn.id].cost : upgrades[btn.id].cost;
+                    btn.disabled = gameState.score < cost || 
+                                  (gameState.upgrades[btn.id]?.progress >= premiumUpgrades[btn.id]?.maxProgress);
                 }
             });
         }
         
-        function createClickEffect(e) {
-            const effect = document.createElement('div');
-            effect.className = 'click-effect';
-            const x = e.clientX || e.touches?.[0]?.clientX;
-            const y = e.clientY || e.touches?.[0]?.clientY;
+        function renderUpgrades() {
+            const t = translations[gameState.language];
+            let html = '';
             
-            if (x && y) {
-                effect.style.left = `${x}px`;
-                effect.style.top = `${y}px`;
-                document.body.appendChild(effect);
-                setTimeout(() => effect.remove(), 800);
+            const regularUpgrades = [
+                {
+                    id: 'clickPower1', name: 'Усиленный палец', cost: '100', 
+                    desc: '+1 очко за каждый клик', owned: gameState.upgrades.clickPower1.owned
+                },
+                {
+                    id: 'clickPower2', name: 'Золотой палец', cost: '500', 
+                    desc: 'Удваивает очки за клик', owned: gameState.upgrades.clickPower2.owned
+                },
+                {
+                    id: 'clickPower3', name: 'Платиновый палец', cost: '2,500', 
+                    desc: 'Утраивает очки за клик', owned: gameState.upgrades.clickPower3.owned
+                },
+                {
+                    id: 'autoClicker1', name: 'Автокликер I', cost: '250', 
+                    desc: 'Автоматически кликает 1 раз в секунду', owned: gameState.upgrades.autoClicker1.owned
+                },
+                {
+                    id: 'autoClicker2', name: 'Автокликер II', cost: '1,250', 
+                    desc: 'Автоматически кликает 2 раза в секунду', owned: gameState.upgrades.autoClicker2.owned
+                },
+                {
+                    id: 'autoClicker3', name: 'Автокликер III', cost: '6,250', 
+                    desc: 'Автоматически кликает 5 раз в секунду', owned: gameState.upgrades.autoClicker3.owned
+                }
+            ];
+            
+            const premiumUpgrades = [
+                {
+                    id: 'clickStorm', name: 'Клик-шторм', cost: '25,000', 
+                    desc: 'Автокликеры работают в 2 раза быстрее', 
+                    progress: gameState.upgrades.clickStorm.progress, maxProgress: 100
+                },
+                {
+                    id: 'criticalHit', name: 'Критический удар', cost: '15,000', 
+                    desc: '10% шанс получить 5x очков за клик', 
+                    progress: gameState.upgrades.criticalHit.progress, maxProgress: 100
+                },
+                {
+                    id: 'goldRush', name: 'Золотая лихорадка', cost: '50,000', 
+                    desc: 'Все очки увеличиваются на 25%', 
+                    progress: gameState.upgrades.goldRush.progress, maxProgress: 100
+                },
+                {
+                    id: 'infinityClick', name: 'Бесконечный клик', cost: '100,000', 
+                    desc: 'Автокликеры работают в 10 раз быстрее', 
+                    progress: gameState.upgrades.infinityClick.progress, maxProgress: 100
+                }
+            ];
+            
+            const specialUpgrades = [];
+            if (gameState.upgrades.specialUpgrade.owned) {
+                specialUpgrades.push({
+                    id: 'specialUpgrade', name: 'Секретное улучшение', cost: 'Промокод', 
+                    desc: 'Увеличивает множитель очков на 50%', owned: true
+                });
+            }
+            
+            regularUpgrades.filter(up => !up.owned).forEach(up => {
+                html += `
+                    <div class="upgrade">
+                        <div class="upgrade-header"><span class="upgrade-name">${up.name}</span><span class="upgrade-cost">${up.cost}</span></div>
+                        <div class="upgrade-desc">${up.desc}</div>
+                        <button class="upgrade-btn" id="${up.id}" onclick="buyUpgrade('${up.id}')">${t.upgrade}</button>
+                    </div>
+                `;
+            });
+            
+            regularUpgrades.filter(up => up.owned).forEach(up => {
+                html += `
+                    <div class="upgrade owned">
+                        <div class="upgrade-header"><span class="upgrade-name">${up.name}</span><span class="upgrade-cost">${t.bought}</span></div>
+                        <div class="upgrade-desc">${up.desc}</div>
+                        <button class="upgrade-btn" disabled>${t.bought}</button>
+                    </div>
+                `;
+            });
+            
+            premiumUpgrades.forEach(up => {
+                const progress = (up.progress / up.maxProgress) * 100;
+                const canBuy = gameState.score >= parseInt(up.cost.replace(/,/g, '')) && up.progress < up.maxProgress;
+                
+                html += `
+                    <div class="upgrade premium">
+                        <div class="upgrade-header">
+                            <span class="upgrade-name premium">${up.name}</span>
+                            <span class="upgrade-cost premium">${up.cost}</span>
+                        </div>
+                        <div class="upgrade-desc">${up.desc}</div>
+                        <div class="premium-progress">
+                            <div class="premium-progress-bar" style="width: ${progress}%"></div>
+                        </div>
+                        <button class="upgrade-btn" id="${up.id}" onclick="buyUpgrade('${up.                id}')" ${canBuy ? '' : 'disabled'}>
+                            ${up.progress < up.maxProgress ? t.upgrade : t.activated}
+                        </button>
+                    </div>
+                `;
+            });
+
+            specialUpgrades.forEach(up => {
+                html += `
+                    <div class="upgrade special-upgrade">
+                        <div class="upgrade-header">
+                            <span class="upgrade-name">${up.name}</span>
+                            <span class="upgrade-cost">${up.cost}</span>
+                        </div>
+                        <div class="upgrade-desc">${up.desc}</div>
+                        <button class="upgrade-btn" disabled>${t.activated}</button>
+                    </div>
+                `;
+            });
+
+            DOM.upgradesList.innerHTML = html;
+        }
+
+        function renderStats() {
+            const t = translations[gameState.language];
+            
+            const formatTime = (seconds) => {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            };
+            
+            const stats = [
+                { name: t.totalPoints, value: Math.floor(gameState.totalPoints) },
+                { name: t.totalClicks, value: gameState.totalClicks },
+                { name: t.pointsFromClicks, value: Math.floor(gameState.pointsFromClicks) },
+                { name: t.pointsFromAuto, value: Math.floor(gameState.pointsFromAuto) },
+                { name: t.criticalHits, value: gameState.criticalHits },
+                { name: t.playTime, value: formatTime(gameState.playTime) },
+                { name: t.totalMultiplier, value: `${gameState.globalMultiplier.toFixed(1)}x` }
+            ];
+            
+            let html = '';
+            stats.forEach(stat => {
+                html += `
+                    <div class="stat">
+                        <span class="stat-name">${stat.name}</span>
+                        <span class="stat-value">${stat.value}</span>
+                    </div>
+                `;
+            });
+            
+            DOM.statsList.innerHTML = html;
+        }
+
+        function renderSettings() {
+            const t = translations[gameState.language];
+            
+            let html = `
+                <div class="settings-section">
+                    <h3>${t.colorTheme}</h3>
+                    <div class="color-options">
+            `;
+            
+            Object.keys(colorSchemes).forEach(scheme => {
+                html += `
+                    <div class="color-option ${gameState.colorScheme === scheme ? 'selected' : ''}" 
+                          style="background: ${colorSchemes[scheme].primary}"
+                          onclick="changeColorScheme('${scheme}')"></div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>${t.gameManagement}</h3>
+                    <button class="reset-btn" onclick="resetProgress()">${t.resetProgress}</button>
+                    <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px">${t.enterCheat}</button>
+                </div>
+            `;
+            
+            DOM.settingsContent.innerHTML = html;
+        }
+
+        function renderAll() {
+            updateUI();
+            renderUpgrades();
+            renderStats();
+            renderSettings();
+            applyColorScheme();
+        }
+
+        function changeColorScheme(scheme) {
+            gameState.colorScheme = scheme;
+            applyColorScheme();
+            renderSettings();
+            saveGame();
+        }
+
+        function applyColorScheme() {
+            const scheme = colorSchemes[gameState.colorScheme];
+            document.documentElement.style.setProperty('--primary', scheme.primary);
+            document.documentElement.style.setProperty('--secondary', scheme.secondary);
+            document.documentElement.style.setProperty('--accent', scheme.accent);
+        }
+
+        function showCheatInput() {
+            DOM.cheatContainer.style.display = 'flex';
+            DOM.cheatInput.value = '';
+        }
+
+        function hideCheatInput() {
+            DOM.cheatContainer.style.display = 'none';
+        }
+
+        function applyCheat(code) {
+            const t = translations[gameState.language];
+            
+            if (cheats[code]) {
+                if (cheats[code].used) {
+                    alert(t.cheatUsed);
+                } else {
+                    cheats[code].used = true;
+                    cheats[code].effect();
+                    alert(t.cheatSuccess);
+                    renderAll();
+                    saveGame();
+                }
+            } else {
+                alert(t.cheatInvalid);
+            }
+            
+            hideCheatInput();
+        }
+
+        function resetProgress() {
+            const t = translations[gameState.language];
+            
+            if (confirm(t.resetConfirm)) {
+                gameState = {
+                    score: 0, totalClicks: 0, pointsFromClicks: 0, pointsFromAuto: 0, criticalHits: 0,
+                    playTime: 0, totalPoints: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
+                    globalMultiplier: 1, colorScheme: gameState.colorScheme, language: 'ru',
+                    upgrades: {
+                        clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
+                        autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
+                        clickStorm: { progress: 0 }, criticalHit: { progress: 0 }, goldRush: { progress: 0 }, 
+                        infinityClick: { progress: 0 }, specialUpgrade: { owned: false }
+                    }
+                };
+                
+                Object.keys(cheats).forEach(code => {
+                    cheats[code].used = false;
+                });
+                
+                renderAll();
+                saveGame();
+                alert(t.resetSuccess);
             }
         }
-        
-        // Игровые циклы
-        setInterval(() => {
-            if (gameState.autoClickers > 0) {
-                let points = gameState.autoClickers * gameState.autoClickPower;
-                points = Math.floor(points * gameState.globalMultiplier);
-                if (gameState.upgrades.goldRush.progress >= 100) points = Math.floor(points * 1.25);
+
+        function saveGame() {
+            localStorage.setItem('laBertosClick', JSON.stringify(gameState));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('laBertosClick');
+            if (saved) {
+                const loaded = JSON.parse(saved);
                 
-                gameState.score += points;
-                gameState.pointsFromAuto += points;
-                gameState.totalPoints += points;
-                
-                if (gameState.playTime % 10 === 0) saveGame();
-                updateUI();
+                // Merge loaded state with default state to ensure all properties exist
+                gameState = {
+                    ...gameState,
+                    ...loaded,
+                    upgrades: {
+                        ...gameState.upgrades,
+                        ...(loaded.upgrades || {})
+                    }
+                };
             }
-        }, gameState.upgrades.clickStorm.progress >= 100 ? 500 : 1000);
+        }
+
+        // Initialize the game when the page loads
+        window.onload = initGame;
         
-        setInterval(() => {
-            gameState.playTime++;
-            document.getElementById('playTime').textContent = 
-                `${Math.floor(gameState.playTime/60)}:${(gameState.playTime%60).toString().padStart(2,'0')}`;
-        }, 1000);
-        
-        // Запуск игры
-        initGame();
+        // Expose functions to global scope for HTML onclick handlers
+        window.buyUpgrade = buyUpgrade;
+        window.changeColorScheme = changeColorScheme;
+        window.resetProgress = resetProgress;
+        window.showCheatInput = showCheatInput;
     </script>
 </body>
 </html>
