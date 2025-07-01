@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>La Berto’s Click</title>
+    <title>La Berto's Click</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
     * {
@@ -29,7 +29,7 @@
         overflow: hidden;
         transition: background-color 0.3s, color 0.3s;
         -webkit-text-size-adjust: 100%;
-        font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         text-align: center;
         background-color: var(--bg);
         color: var(--text);
@@ -38,39 +38,45 @@
     }
 
     :root {
-        --primary: #8e44ad;
-        --secondary: #9b59b6;
-        --accent: #e74c3c;
-        --text: #2c3e50;
-        --bg: #f9f9f9;
-        --premium: #f1c40f;
-        --card-bg: #ffffff;
-        --border: #e0e0e0;
-        --stat-bg: #ffffff;
-        --reset-btn: #e74c3c;
-        --owned-bg: #f0f0f0;
-        --owned-text: #888;
-        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --primary: #6C5CE7;
+        --primary-dark: #5649C0;
+        --secondary: #00B894;
+        --accent: #FD79A8;
+        --text: #2D3436;
+        --text-light: #636E72;
+        --bg: #F5F6FA;
+        --card-bg: #FFFFFF;
+        --border: #DFE6E9;
+        --stat-bg: #FFFFFF;
+        --reset-btn: #E17055;
+        --owned-bg: #F0F3F7;
+        --owned-text: #7F8C8D;
+        --premium: #FDCB6E;
+        --legendary: #E84393;
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
         --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
         --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 16px;
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --radius-xl: 18px;
     }
     
     @media (prefers-color-scheme: dark) {
         :root {
-            --text: #ecf0f1;
-            --bg: #121212;
-            --card-bg: #1e1e1e;
-            --border: #333333;
-            --stat-bg: #252525;
-            --reset-btn: #c0392b;
-            --owned-bg: #2a2a2a;
-            --owned-text: #666;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.25);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.2);
+            --primary: #A29BFE;
+            --primary-dark: #847BFF;
+            --secondary: #55EFC4;
+            --accent: #FF9FF3;
+            --text: #ECF0F1;
+            --text-light: #B2BEC3;
+            --bg: #1A1E2C;
+            --card-bg: #252A3A;
+            --border: #3B4252;
+            --stat-bg: #2D3445;
+            --reset-btn: #FF7675;
+            --owned-bg: #2D3445;
+            --owned-text: #7F8C8D;
         }
     }
 
@@ -84,54 +90,53 @@
     }
     
     .header {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        background: var(--primary);
         color: white;
-        padding: 15px 0;
-        box-shadow: var(--shadow-md);
+        padding: 18px 0;
         position: sticky;
         top: 0;
         z-index: 10;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
     .header h1 {
         margin: 0;
-        font-size: clamp(1.5rem, 6vw, 2.2rem);
+        font-size: clamp(1.5rem, 6vw, 2rem);
         font-weight: 800;
-        font-style: italic;
-        letter-spacing: 1px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        letter-spacing: -0.5px;
     }
     
     .tabs {
         display: flex;
         background: var(--card-bg);
-        box-shadow: var(--shadow-sm);
         position: sticky;
         top: 0;
         z-index: 9;
+        border-bottom: 1px solid var(--border);
     }
     
     .tab {
         flex: 1;
-        padding: 12px 5px;
+        padding: 14px 5px;
         cursor: pointer;
         font-weight: 600;
-        transition: all 0.3s ease;
-        font-size: clamp(0.8rem, 3vw, 1rem);
-        color: var(--text);
+        transition: all 0.2s ease;
+        font-size: clamp(0.8rem, 3vw, 0.95rem);
+        color: var(--text-light);
         position: relative;
     }
     
     .tab.active {
         color: var(--primary);
+        background-color: rgba(108, 92, 231, 0.1);
     }
     
     .tab.active::after {
         content: '';
         position: absolute;
-        bottom: 0;
-        left: 20%;
-        right: 20%;
+        bottom: -1px;
+        left: 25%;
+        right: 25%;
         height: 3px;
         background: var(--primary);
         border-radius: 3px 3px 0 0;
@@ -150,13 +155,13 @@
     }
     
     #clickButton {
-        width: clamp(140px, 45vw, 200px);
-        height: clamp(140px, 45vw, 200px);
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        width: clamp(150px, 50vw, 220px);
+        height: clamp(150px, 50vw, 220px);
+        border-radius: var(--radius-xl);
+        background: var(--primary);
         color: white;
         border: none;
-        font-size: clamp(1.2rem, 4vw, 1.8rem);
+        font-size: clamp(1.3rem, 4vw, 1.8rem);
         font-weight: 800;
         cursor: pointer;
         margin: 25px auto;
@@ -166,6 +171,9 @@
         -webkit-appearance: none;
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     #clickButton::before {
@@ -185,43 +193,43 @@
     
     #clickButton:active {
         transform: scale(0.95);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        background: var(--primary-dark);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         animation: none;
     }
     
     #score {
-        font-size: clamp(1.8rem, 7vw, 2.2rem);
+        font-size: clamp(2rem, 8vw, 2.5rem);
         font-weight: 800;
         margin: 20px 0;
         color: var(--primary);
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        letter-spacing: -1px;
     }
     
     .upgrades-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 15px;
-        margin-top: 20px;
+        margin-top: 15px;
     }
     
     .upgrade {
         background: var(--card-bg);
         border-radius: var(--radius-md);
-        padding: 15px;
+        padding: 16px;
         box-shadow: var(--shadow-sm);
         text-align: left;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         border: 1px solid var(--border);
     }
     
     .upgrade:hover {
-        transform: translateY(-3px);
+        transform: translateY(-2px);
         box-shadow: var(--shadow-md);
     }
     
     .upgrade.owned {
         background: var(--owned-bg);
-        opacity: 0.9;
         order: 1;
     }
     
@@ -240,18 +248,15 @@
     }
     
     .upgrade.premium {
-        border: 2px solid var(--premium);
-        background: linear-gradient(to bottom right, var(--card-bg), rgba(241, 196, 15, 0.1));
+        border-left: 4px solid var(--premium);
     }
     
     .upgrade.special-upgrade {
-        border: 2px dashed var(--primary);
-        background: linear-gradient(to bottom right, var(--card-bg), rgba(142, 68, 173, 0.1));
+        border-left: 4px solid var(--accent);
     }
     
     .upgrade.legendary {
-        border: 2px solid #ff5722;
-        background: linear-gradient(to bottom right, var(--card-bg), rgba(255, 87, 34, 0.1));
+        border-left: 4px solid var(--legendary);
         animation: glow 2s infinite alternate;
     }
     
@@ -259,33 +264,30 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     
     .upgrade-name {
         font-weight: 700;
-        font-size: clamp(1rem, 3.5vw, 1.2rem);
+        font-size: clamp(1rem, 3.5vw, 1.15rem);
         color: var(--primary);
     }
     
     .upgrade-name.premium {
         color: var(--premium);
-        animation: rainbow 3s infinite;
     }
     
     .upgrade-name.legendary {
-        color: #ff5722;
-        animation: fire 2s infinite;
+        color: var(--legendary);
     }
     
     .upgrade-cost {
         background: var(--accent);
         color: white;
         padding: 4px 10px;
-        border-radius: 20px;
+        border-radius: var(--radius-sm);
         font-size: clamp(0.8rem, 3vw, 0.9rem);
         font-weight: bold;
-        box-shadow: var(--shadow-sm);
     }
     
     .upgrade-cost.premium {
@@ -294,14 +296,13 @@
     }
     
     .upgrade-cost.legendary {
-        background: #ff5722;
+        background: var(--legendary);
         color: white;
     }
     
     .upgrade-desc {
-        color: var(--text);
-        opacity: 0.8;
-        margin-bottom: 15px;
+        color: var(--text-light);
+        margin-bottom: 16px;
         font-size: clamp(0.85rem, 3vw, 0.95rem);
         line-height: 1.4;
     }
@@ -311,23 +312,21 @@
         padding: 10px;
         border: none;
         border-radius: var(--radius-sm);
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        background: var(--primary);
         color: white;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         font-size: clamp(0.9rem, 3vw, 1rem);
         -webkit-appearance: none;
-        box-shadow: var(--shadow-sm);
     }
     
     .upgrade-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
+        background: var(--primary-dark);
     }
     
     .upgrade-btn:active:not(:disabled) {
-        transform: translateY(0);
+        transform: translateY(1px);
     }
     
     .upgrade-btn:disabled {
@@ -337,28 +336,28 @@
     }
     
     .upgrade-btn.premium {
-        background: linear-gradient(135deg, var(--premium), #f39c12);
+        background: var(--premium);
     }
     
     .upgrade-btn.legendary {
-        background: linear-gradient(135deg, #ff5722, #ff9800);
+        background: var(--legendary);
     }
     
     .stats-container, .settings-container {
-        background: var(--stat-bg);
+        background: var(--card-bg);
         border-radius: var(--radius-md);
         padding: 20px;
-        box-shadow: var(--shadow-sm);
         margin-top: 20px;
         border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
     }
     
     .stat {
         display: flex;
         justify-content: space-between;
-        padding: 10px 0;
+        padding: 12px 0;
         border-bottom: 1px solid var(--border);
-        font-size: clamp(0.9rem, 3vw, 1.1rem);
+        font-size: clamp(0.9rem, 3vw, 1rem);
     }
     
     .stat:last-child {
@@ -366,8 +365,8 @@
     }
     
     .stat-name {
-        font-weight: 600;
-        opacity: 0.9;
+        font-weight: 500;
+        color: var(--text-light);
     }
     
     .stat-value {
@@ -396,13 +395,13 @@
     
     .premium-progress-bar {
         height: 100%;
-        background: linear-gradient(to right, var(--premium), #f39c12);
+        background: var(--premium);
         width: 0%;
         transition: width 0.5s ease;
     }
     
     .legendary-progress-bar {
-        background: linear-gradient(to right, #ff5722, #ff9800);
+        background: var(--legendary);
     }
     
     .settings-section {
@@ -421,33 +420,46 @@
         margin-top: 0;
         margin-bottom: 15px;
         color: var(--primary);
+        font-size: 1.1rem;
     }
     
     .color-options {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
         margin: 15px 0;
         justify-content: center;
     }
     
     .color-option {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
-        border: 3px solid transparent;
-        transition: all 0.3s ease;
-        box-shadow: var(--shadow-sm);
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+        position: relative;
     }
     
     .color-option:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
     }
     
     .color-option.selected {
-        border: 3px solid var(--text);
-        transform: scale(1.1);
+        border: 2px solid var(--primary);
+        transform: scale(1.05);
+    }
+    
+    .color-option .price-tag {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background: var(--accent);
+        color: white;
+        font-size: 10px;
+        padding: 2px 5px;
+        border-radius: 10px;
+        font-weight: bold;
     }
     
     .reset-btn, .cheat-submit {
@@ -456,10 +468,9 @@
         border-radius: var(--radius-sm);
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         -webkit-appearance: none;
-        font-size: 1rem;
-        box-shadow: var(--shadow-sm);
+        font-size: 0.95rem;
     }
     
     .reset-btn {
@@ -469,12 +480,11 @@
     }
     
     .reset-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
+        opacity: 0.9;
     }
     
     .reset-btn:active {
-        transform: translateY(0);
+        transform: translateY(1px);
     }
     
     .cheat-container {
@@ -493,7 +503,7 @@
     
     .cheat-box {
         background: var(--card-bg);
-        padding: 25px;
+        padding: 20px;
         border-radius: var(--radius-lg);
         width: 90%;
         max-width: 380px;
@@ -504,7 +514,7 @@
     .cheat-title {
         margin-top: 0;
         color: var(--primary);
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         margin-bottom: 20px;
     }
     
@@ -537,7 +547,6 @@
         color: var(--text);
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: var(--shadow-sm);
     }
     
     .cheat-button:hover {
@@ -568,104 +577,57 @@
     }
     
     .cheat-submit:hover, .cheat-cancel:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
+        opacity: 0.9;
     }
     
     .cheat-submit:active, .cheat-cancel:active {
-        transform: translateY(0);
-    }
-    
-    .promo-btn {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: var(--radius-sm);
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 10px;
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    
-    .promo-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-    
-    .promo-btn:active {
-        transform: translateY(0);
-    }
-    
-    .promo-btn i {
-        font-style: normal;
-        font-size: 1.2em;
-    }
-    
-    .used-promos {
-        margin-top: 20px;
-        background: var(--card-bg);
-        border-radius: var(--radius-md);
-        padding: 15px;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border);
-    }
-    
-    .used-promos h4 {
-        margin-top: 0;
-        margin-bottom: 10px;
-        color: var(--primary);
-    }
-    
-    .promo-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    
-    .promo-tag {
-        background: var(--border);
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        color: var(--text);
+        transform: translateY(1px);
     }
     
     .sort-buttons {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 15px;
+        overflow-x: auto;
+        padding-bottom: 5px;
+        scrollbar-width: none;
+    }
+    
+    .sort-buttons::-webkit-scrollbar {
+        display: none;
     }
     
     .sort-btn {
-        flex: 1;
-        padding: 8px;
+        flex: none;
+        padding: 8px 12px;
         border: none;
         border-radius: var(--radius-sm);
         background: var(--card-bg);
         color: var(--text);
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: var(--shadow-sm);
-        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        font-size: 0.85rem;
+        border: 1px solid var(--border);
+        white-space: nowrap;
     }
     
     .sort-btn.active {
         background: var(--primary);
         color: white;
+        border-color: var(--primary);
+    }
+    
+    h2 {
+        color: var(--primary);
+        margin-top: 0;
+        font-size: 1.4rem;
     }
     
     @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(142, 68, 173, 0.4); }
-        70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(142, 68, 173, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(142, 68, 173, 0); }
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
     }
     
     @keyframes clickAnimation {
@@ -678,37 +640,16 @@
         to { opacity: 1; transform: translateY(0); }
     }
     
-    @keyframes rainbow {
-        0% { color: #ff0000; }
-        14% { color: #ff7f00; }
-        28% { color: #ffff00; }
-        42% { color: #00ff00; }
-        57% { color: #0000ff; }
-        71% { color: #4b0082; }
-        85% { color: #9400d3; }
-        100% { color: #ff0000; }
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-    
     @keyframes glow {
-        from { box-shadow: 0 0 5px -5px #ff5722; }
-        to { box-shadow: 0 0 10px 5px #ff5722; }
-    }
-    
-    @keyframes fire {
-        0% { text-shadow: 0 0 5px #ff5722; }
-        50% { text-shadow: 0 0 10px #ff9800; }
-        100% { text-shadow: 0 0 5px #ff5722; }
+        from { box-shadow: 0 0 5px -5px var(--legendary); }
+        to { box-shadow: 0 0 10px 2px var(--legendary); }
     }
     
     @media (max-width: 350px) {
         .upgrades-container { grid-template-columns: 1fr; }
-        .tab { padding: 10px 3px; font-size: 0.7rem; }
+        .tab { padding: 12px 3px; font-size: 0.7rem; }
         .color-option { width: 36px; height: 36px; }
+        .sort-btn { padding: 8px 10px; font-size: 0.8rem; }
     }
     
     @media (min-width: 768px) {
@@ -752,10 +693,9 @@
         <div class="tab-content" id="upgrades-tab">
             <h2>Улучшения</h2>
             <div class="sort-buttons">
-                <button class="sort-btn active" data-sort="all">Все</button>
-                <button class="sort-btn" data-sort="click">Клики</button>
-                <button class="sort-btn" data-sort="auto">Авто</button>
-                <button class="sort-btn" data-sort="special">Специальные</button>
+                <button class="sort-btn active" data-sort="expensive">Дороже</button>
+                <button class="sort-btn" data-sort="cheap">Дешевле</button>
+                <button class="sort-btn" data-sort="available">Доступные</button>
             </div>
             <div class="upgrades-container" id="upgradesList"></div>
         </div>
@@ -806,16 +746,26 @@
                 cheatSuccess: "Промокод активирован!", cheatInvalid: "Неверный промокод", cheatUsed: "Этот промокод уже использован",
                 resetConfirm: "Вы уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.",
                 resetSuccess: "Прогресс успешно сброшен!",
-                promoCode: "Промокод", usedPromos: "Использованные промокоды", noPromosUsed: "Промокоды не использовались"
+                usedPromos: "Использованные промокоды", noPromosUsed: "Промокоды не использовались",
+                expensive: "Дороже", cheap: "Дешевле", available: "Доступные"
             }
         };
         
         const colorSchemes = {
-            purple: { primary: '#8e44ad', secondary: '#9b59b6', accent: '#e74c3c' },
-            blue: { primary: '#3498db', secondary: '#2980b9', accent: '#e74c3c' },
-            green: { primary: '#2ecc71', secondary: '#27ae60', accent: '#e74c3c' },
-            red: { primary: '#e74c3c', secondary: '#c0392b', accent: '#3498db' },
-            orange: { primary: '#e67e22', secondary: '#d35400', accent: '#3498db' }
+            purple: { primary: '#6C5CE7', secondary: '#00B894', accent: '#FD79A8', price: 1000 },
+            blue: { primary: '#0984E3', secondary: '#00CEC9', accent: '#FF7675', price: 1000 },
+            green: { primary: '#00B894', secondary: '#55EFC4', accent: '#FD79A8', price: 1000 },
+            red: { primary: '#D63031', secondary: '#E84393', accent: '#FDCB6E', price: 1000 },
+            orange: { primary: '#E17055', secondary: '#FDCB6E', accent: '#A29BFE', price: 1000 },
+            pink: { primary: '#E84393', secondary: '#FD79A8', accent: '#FDCB6E', price: 1000 },
+            teal: { primary: '#00CEA9', secondary: '#55EFC4', accent: '#A29BFE', price: 1000 },
+            indigo: { primary: '#5D5FEF', secondary: '#847BFF', accent: '#FF9FF3', price: 1000 },
+            gold: { primary: '#FFD700', secondary: '#FFA500', accent: '#FF6347', price: 5000 },
+            emerald: { primary: '#2ECC71', secondary: '#1ABC9C', accent: '#3498DB', price: 5000 },
+            ruby: { primary: '#E74C3C', secondary: '#C0392B', accent: '#9B59B6', price: 5000 },
+            sapphire: { primary: '#3498DB', secondary: '#2980B9', accent: '#2ECC71', price: 5000 },
+            amethyst: { primary: '#9B59B6', secondary: '#8E44AD', accent: '#E74C3C', price: 5000 },
+            midnight: { primary: '#2C3E50', secondary: '#34495E', accent: '#7F8C8D', price: 5000 }
         };
         
         const cheats = {
@@ -869,7 +819,9 @@
                 autoClicker4: { owned: false }, autoClicker5: { owned: false },
                 secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
             },
-            usedPromoCodes: []
+            usedPromoCodes: [],
+            unlockedColors: ['purple'],
+            totalPoints: 0
         };
         
         const upgrades = {
@@ -904,9 +856,11 @@
             renderAll();
             startGameLoop();
             
-            tg.MainButton.setText("Закрыть игру");
-            tg.MainButton.show();
-            tg.MainButton.onClick(() => { saveGame(); tg.close(); });
+            if (tg && tg.MainButton) {
+                tg.MainButton.setText("Закрыть игру");
+                tg.MainButton.show();
+                tg.MainButton.onClick(() => { saveGame(); tg.close(); });
+            }
         }
         
         function setupEventListeners() {
@@ -969,6 +923,7 @@
             clickEffect.className = 'click-effect';
             clickEffect.style.left = ${e.clientX}px;
             clickEffect.style.top = ${e.clientY}px;
+            clickEffect.style.background = colorSchemes[gameState.colorScheme].accent;
             document.body.appendChild(clickEffect);
             
             setTimeout(() => {
@@ -984,7 +939,9 @@
             gameState.totalClicks++;
             
             if (isCritical) {
-                DOM.clickButton.style.animation = 'bounce 0.3s';
+                DOM.clickButton.style.animation = 'none';
+                void DOM.clickButton.offsetWidth; // Trigger reflow
+                DOM.clickButton.style.animation = 'pulse 0.3s';
                 setTimeout(() => {
                     DOM.clickButton.style.animation = 'pulse 2s infinite';
                 }, 300);
@@ -995,14 +952,31 @@
         
         function buyUpgrade(id) {
             const upgrade = upgrades[id];
+            const cost = parseInt(upgrade.cost);
             
-            if (gameState.score >= upgrade.cost && !gameState.upgrades[id]?.owned) {
-                gameState.score -= upgrade.cost;
+            if (gameState.score >= cost && !gameState.upgrades[id]?.owned) {
+                gameState.score -= cost;
                 gameState.upgrades[id].owned = true;
                 upgrade.effect();
                 
                 renderUpgrades();
                 updateUI();
+                saveGame();
+            }
+        }
+        
+        function buyColorScheme(scheme) {
+            if (gameState.unlockedColors.includes(scheme)) {
+                gameState.colorScheme = scheme;
+                applyColorScheme();
+                renderSettings();
+                saveGame();
+            } else if (gameState.score >= colorSchemes[scheme].price) {
+                gameState.score -= colorSchemes[scheme].price;
+                gameState.unlockedColors.push(scheme);
+                gameState.colorScheme = scheme;
+                applyColorScheme();
+                renderSettings();
                 saveGame();
             }
         }
@@ -1021,49 +995,49 @@
             document.getElementById('multiplierStat').textContent = ${gameState.globalMultiplier.toFixed(1)}x;
         }
         
-        function renderUpgrades(sortType = 'all') {
+        function renderUpgrades(sortType = 'expensive') {
             const t = translations[gameState.language];
             let html = '';
             
             const regularUpgrades = [
                 {
-                    id: 'clickPower1', name: 'Усиленный палец', cost: '100', 
+                    id: 'clickPower1', name: 'Усиленный палец', cost: 100, 
                     desc: '+1 очко за каждый клик', owned: gameState.upgrades.clickPower1.owned, type: 'click'
                 },
                 {
-                    id: 'clickPower2', name: 'Золотой палец', cost: '500', 
+                    id: 'clickPower2', name: 'Золотой палец', cost: 500, 
                     desc: 'Удваивает очки за клик', owned: gameState.upgrades.clickPower2.owned, type: 'click'
                 },
                 {
-                    id: 'clickPower3', name: 'Платиновый палец', cost: '2,500', 
+                    id: 'clickPower3', name: 'Платиновый палец', cost: 2500, 
                     desc: 'Утраивает очки за клик', owned: gameState.upgrades.clickPower3.owned, type: 'click'
                 },
                 {
-                    id: 'clickPower4', name: 'Алмазный палец', cost: '10,000', 
+                    id: 'clickPower4', name: 'Алмазный палец', cost: 10000, 
                     desc: 'Увеличивает очки за клик в 5 раз', owned: gameState.upgrades.clickPower4.owned, type: 'click'
                 },
                 {
-                    id: 'clickPower5', name: 'Легендарный палец', cost: '50,000', 
+                    id: 'clickPower5', name: 'Легендарный палец', cost: 50000, 
                     desc: 'Увеличивает очки за клик в 10 раз', owned: gameState.upgrades.clickPower5.owned, type: 'click'
                 },
                 {
-                    id: 'autoClicker1', name: 'Автокликер I', cost: '250', 
+                    id: 'autoClicker1', name: 'Автокликер I', cost: 250, 
                     desc: 'Автоматически кликает 1 раз в секунду', owned: gameState.upgrades.autoClicker1.owned, type: 'auto'
                 },
                 {
-                    id: 'autoClicker2', name: 'Автокликер II', cost: '1,250', 
+                    id: 'autoClicker2', name: 'Автокликер II', cost: 1250, 
                     desc: 'Автоматически кликает 2 раза в секунду', owned: gameState.upgrades.autoClicker2.owned, type: 'auto'
                 },
                 {
-                    id: 'autoClicker3', name: 'Автокликер III', cost: '6,250', 
+                    id: 'autoClicker3', name: 'Автокликер III', cost: 6250, 
                     desc: 'Автоматически кликает 5 раз в секунду', owned: gameState.upgrades.autoClicker3.owned, type: 'auto'
                 },
                 {
-                    id: 'autoClicker4', name: 'Автокликер IV', cost: '25,000', 
+                    id: 'autoClicker4', name: 'Автокликер IV', cost: 25000, 
                     desc: 'Автоматически кликает 10 раз в секунду', owned: gameState.upgrades.autoClicker4.owned, type: 'auto'
                 },
                 {
-                    id: 'autoClicker5', name: 'Автокликер V', cost: '100,000', 
+                    id: 'autoClicker5', name: 'Автокликер V', cost: 100000, 
                     desc: 'Автоматически кликает 20 раз в секунду', owned: gameState.upgrades.autoClicker5.owned, type: 'auto'
                 }
             ];
@@ -1083,21 +1057,24 @@
             }
             
             // Filter upgrades based on sort type
-            let filteredUpgrades = [];
-            if (sortType === 'all') {
-                filteredUpgrades = [...regularUpgrades, ...specialUpgrades];
-            } else {
-                filteredUpgrades = [...regularUpgrades.filter(up => up.type === sortType), 
-                                  ...specialUpgrades.filter(up => sortType === 'special')];
+            let filteredUpgrades = [...regularUpgrades, ...specialUpgrades];
+            
+            if (sortType === 'available') {
+                filteredUpgrades = filteredUpgrades.filter(up => !up.owned);
             }
             
-            // Sort by owned status and cost
-            filteredUpgrades.sort((a, b) => {
-                if (a.owned !== b.owned) return a.owned ? 1 : -1;
-                return parseInt(a.cost.replace(/,/g, '')) - parseInt(b.cost.replace(/,/g, ''));
-            });
+            // Sort upgrades
+            if (sortType === 'expensive') {
+                filteredUpgrades.sort((a, b) => b.cost - a.cost);
+            } else if (sortType === 'cheap') {
+                filteredUpgrades.sort((a, b) => a.cost - b.cost);
+            } else if (sortType === 'available') {
+                filteredUpgrades.sort((a, b) => a.cost - b.cost);
+            }
             
             filteredUpgrades.forEach(up => {
+                const costText = typeof up.cost === 'number' ? up.cost.toLocaleString() : up.cost;
+                
                 if (up.owned) {
                     html += `
                         <div class="upgrade owned">
@@ -1107,14 +1084,14 @@
                         </div>
                     `;
                 } else {
-                    const canBuy = gameState.score >= parseInt(up.cost.replace(/,/g, ''));
+                    const canBuy = typeof up.cost === 'number' ? gameState.score >= up.cost : false;
                     const isSpecial = up.type === 'special';
                     
                     html += `
                         <div class="upgrade ${isSpecial ? 'special-upgrade' : ''}">
                             <div class="upgrade-header">
                                 <span class="upgrade-name">${up.name}</span>
-                                <span class="upgrade-cost">${up.cost}</span>
+                                <span class="upgrade-cost">${costText}</span>
                             </div>
                             <div class="upgrade-desc">${up.desc}</div>
                             <button class="upgrade-btn" id="${up.id}" onclick="buyUpgrade('${up.id}')" ${canBuy ? '' : 'disabled'}>
@@ -1138,10 +1115,15 @@
             `;
             
             Object.keys(colorSchemes).forEach(scheme => {
+                const isUnlocked = gameState.unlockedColors.includes(scheme);
+                const isSelected = gameState.colorScheme === scheme;
+                
                 html += `
-                    <div class="color-option ${gameState.colorScheme === scheme ? 'selected' : ''}" 
+                    <div class="color-option ${isSelected ? 'selected' : ''}" 
                           style="background: ${colorSchemes[scheme].primary}"
-                          onclick="changeColorScheme('${scheme}')"></div>
+                          onclick="buyColorScheme('${scheme}')">
+                        ${!isUnlocked ? <span class="price-tag">${colorSchemes[scheme].price}</span> : ''}
+                    </div>
                 `;
             });
             
@@ -1151,28 +1133,21 @@
                 <div class="settings-section">
                     <h3>${t.gameManagement}</h3>
                     <button class="reset-btn" onclick="resetProgress()">${t.resetProgress}</button>
-                    <button class="promo-btn" onclick="showCheatInput()">
-                        <i>🎁</i> ${t.promoCode}
+                    <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
+                        ${t.enterCheat}
                     </button>
                 </div>
             `;
             
             if (gameState.usedPromoCodes.length > 0) {
                 html += `
-                    <div class="used-promos">
+                    <div class="settings-section">
                         <h4>${t.usedPromos}</h4>
-                        <div class="promo-list">
+                        <div style="text-align: left;">
                             ${gameState.usedPromoCodes.map(code => 
-                                <span class="promo-tag">${code} - ${cheats[code]?.name || 'Бонус'}</span>
+                                <div>• ${code} - ${cheats[code]?.name || 'Бонус'}</div>
                             ).join('')}
                         </div>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="used-promos">
-                        <h4>${t.usedPromos}</h4>
-                        <p>${t.noPromosUsed}</p>
                     </div>
                 `;
             }
@@ -1187,18 +1162,39 @@
             applyColorScheme();
         }
 
-        function changeColorScheme(scheme) {
-            gameState.colorScheme = scheme;
-            applyColorScheme();
-            renderSettings();
-            saveGame();
-        }
-
         function applyColorScheme() {
             const scheme = colorSchemes[gameState.colorScheme];
             document.documentElement.style.setProperty('--primary', scheme.primary);
+            document.documentElement.style.setProperty('--primary-dark', shadeColor(scheme.primary, -20));
             document.documentElement.style.setProperty('--secondary', scheme.secondary);
             document.documentElement.style.setProperty('--accent', scheme.accent);
+            
+            // Update click button color
+            DOM.clickButton.style.background = scheme.primary;
+        }
+        
+        function shadeColor(color, percent) {
+            let R = parseInt(color.substring(1,3), 16);
+            let G = parseInt(color.substring(3,5), 16);
+            let B = parseInt(color.substring(5,7), 16);
+
+            R = parseInt(R * (100 + percent) / 100);
+            G = parseInt(G * (100 + percent) / 100);
+            B = parseInt(B * (100 + percent) / 100);
+
+            R = (R<255)?R:255;  
+            G = (G<255)?G:255;  
+            B = (B<255)?B:255;  
+
+            R = Math.round(R);
+            G = Math.round(G);
+            B = Math.round(B);
+
+            const RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+            const GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+            const BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+
+            return "#"+RR+GG+BB;
         }
 
         function showCheatInput() {
@@ -1237,7 +1233,7 @@
             if (confirm(t.resetConfirm)) {
                 gameState = {
                     score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-                    globalMultiplier: 1, colorScheme: gameState.colorScheme, language: 'ru',
+                    globalMultiplier: 1, colorScheme: 'purple', language: 'ru',
                     upgrades: {
                         clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
                         clickPower4: { owned: false }, clickPower5: { owned: false },
@@ -1245,7 +1241,9 @@
                         autoClicker4: { owned: false }, autoClicker5: { owned: false },
                         secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
                     },
-                    usedPromoCodes: []
+                    usedPromoCodes: [],
+                    unlockedColors: ['purple'],
+                    totalPoints: 0
                 };
                 
                 Object.keys(cheats).forEach(code => {
@@ -1274,7 +1272,9 @@
                         ...gameState.upgrades,
                         ...(loaded.upgrades || {})
                     },
-                    usedPromoCodes: loaded.usedPromoCodes || []
+                    usedPromoCodes: loaded.usedPromoCodes || [],
+                    unlockedColors: loaded.unlockedColors || ['purple'],
+                    totalPoints: loaded.totalPoints || 0
                 };
                 
                 if (loaded.usedPromoCodes) {
@@ -1289,7 +1289,7 @@
 
         window.onload = initGame;
         window.buyUpgrade = buyUpgrade;
-        window.changeColorScheme = changeColorScheme;
+        window.buyColorScheme = buyColorScheme;
         window.resetProgress = resetProgress;
         window.showCheatInput = showCheatInput;
     </script>
