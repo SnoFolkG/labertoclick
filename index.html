@@ -829,7 +829,7 @@
             clickPower2: { cost: 500, effect: () => { gameState.clickPower *= 2; }, type: 'click' },
             clickPower3: { cost: 2500, effect: () => { gameState.clickPower *= 3; }, type: 'click' },
             clickPower4: { cost: 10000, effect: () => { gameState.clickPower *= 5; }, type: 'click' },
-            clickPower5: { cost: 50000, effect: () => { gameState.clickPower *= 10; }, type: 'click' },
+            clickPower5: { cost: 50, effect: () => { gameState.clickPower *= 10; }, type: 'click' },
             autoClicker1: { cost: 250, effect: () => { gameState.autoClickers += 1; }, type: 'auto' },
             autoClicker2: { cost: 1250, effect: () => { gameState.autoClickers += 2; }, type: 'auto' },
             autoClicker3: { cost: 6250, effect: () => { gameState.autoClickers += 5; }, type: 'auto' },
@@ -870,7 +870,7 @@
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     
                     tab.classList.add('active');
-                    document.getElementById(${tab.dataset.tab}-tab).classList.add('active');
+                    document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
                 });
             });
             
@@ -921,8 +921,8 @@
         function handleClick(e) {
             const clickEffect = document.createElement('div');
             clickEffect.className = 'click-effect';
-            clickEffect.style.left = ${e.clientX}px;
-            clickEffect.style.top = ${e.clientY}px;
+            clickEffect.style.left = e.clientX + 'px';
+            clickEffect.style.top = e.clientY + 'px';
             clickEffect.style.background = colorSchemes[gameState.colorScheme].accent;
             document.body.appendChild(clickEffect);
             
@@ -988,11 +988,11 @@
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             };
             
-            DOM.score.textContent = ${formatNumber(Math.floor(gameState.score))} ${t.points};
+            DOM.score.textContent = formatNumber(Math.floor(gameState.score)) + ' ' + t.points;
             
             document.getElementById('perClickStat').textContent = formatNumber(Math.round(gameState.clickPower * gameState.globalMultiplier));
             document.getElementById('perSecondStat').textContent = formatNumber(Math.round(gameState.autoClickers * gameState.autoClickPower * gameState.globalMultiplier));
-            document.getElementById('multiplierStat').textContent = ${gameState.globalMultiplier.toFixed(1)}x;
+            document.getElementById('multiplierStat').textContent = gameState.globalMultiplier.toFixed(1) + 'x';
         }
         
         function renderUpgrades(sortType = 'expensive') {
@@ -1122,7 +1122,7 @@
                     <div class="color-option ${isSelected ? 'selected' : ''}" 
                           style="background: ${colorSchemes[scheme].primary}"
                           onclick="buyColorScheme('${scheme}')">
-                        ${!isUnlocked ? <span class="price-tag">${colorSchemes[scheme].price}</span> : ''}
+                        ${!isUnlocked ? '<span class="price-tag">' + colorSchemes[scheme].price + '</span>' : ''}
                     </div>
                 `;
             });
@@ -1145,7 +1145,7 @@
                         <h4>${t.usedPromos}</h4>
                         <div style="text-align: left;">
                             ${gameState.usedPromoCodes.map(code => 
-                                <div>• ${code} - ${cheats[code]?.name || 'Бонус'}</div>
+                                '<div>• ' + code + ' - ' + (cheats[code]?.name || 'Бонус') + '</div>'
                             ).join('')}
                         </div>
                     </div>
@@ -1216,7 +1216,7 @@
                     cheats[code].used = true;
                     cheats[code].effect();
                     gameState.usedPromoCodes.push(code);
-                    alert(${t.cheatSuccess}\nБонус: ${cheats[code].name});
+                    alert(t.cheatSuccess + '\nБонус: ' + cheats[code].name);
                     renderAll();
                     saveGame();
                 }
