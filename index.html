@@ -87,6 +87,8 @@
         overflow-y: auto;
         padding-bottom: 10px;
         -webkit-overflow-scrolling: touch;
+        margin: 0 auto;
+        width: 100%;
     }
     
     .header {
@@ -645,6 +647,79 @@
         to { box-shadow: 0 0 10px 2px var(--legendary); }
     }
     
+    /* Адаптация для больших экранов */
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            height: 100vh;
+            max-height: 900px;
+        }
+        
+        body {
+            padding: 20px;
+            background-color: #e5e7eb;
+        }
+        
+        .header {
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+        
+        .tab-content {
+            padding: 25px;
+        }
+        
+        #clickButton {
+            width: 250px;
+            height: 250px;
+            font-size: 2.2rem;
+        }
+        
+        #score {
+            font-size: 3rem;
+        }
+        
+        .upgrades-container {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .upgrade {
+            padding: 20px;
+        }
+        
+        .stats-container, .settings-container {
+            padding: 25px;
+        }
+        
+        .stat {
+            font-size: 1.1rem;
+        }
+        
+        .color-options {
+            gap: 15px;
+        }
+        
+        .color-option {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .cheat-box {
+            max-width: 450px;
+        }
+        
+        .cheat-input {
+            font-size: 1.3rem;
+        }
+        
+        .cheat-button {
+            font-size: 1.4rem;
+            padding: 15px;
+        }
+    }
+    
     @media (max-width: 350px) {
         .upgrades-container { grid-template-columns: 1fr; }
         .tab { padding: 12px 3px; font-size: 0.7rem; }
@@ -652,7 +727,7 @@
         .sort-btn { padding: 8px 10px; font-size: 0.8rem; }
     }
     
-    @media (min-width: 768px) {
+    @media (min-width: 768px) and (max-width: 1199px) {
         .container { max-width: 768px; margin: 0 auto; }
         #clickButton { width: 220px; height: 220px; font-size: 2rem; }
         .upgrades-container { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
@@ -945,7 +1020,6 @@
                 setTimeout(() => {
                     DOM.clickButton.style.animation = 'pulse 2s infinite';
                 }, 300);
-            }
             
             updateUI();
         }
