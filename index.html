@@ -62,22 +62,20 @@
         --radius-xl: 18px;
     }
     
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --primary: #A29BFE;
-            --primary-dark: #847BFF;
-            --secondary: #55EFC4;
-            --accent: #FF9FF3;
-            --text: #ECF0F1;
-            --text-light: #B2BEC3;
-            --bg: #1A1E2C;
-            --card-bg: #252A3A;
-            --border: #3B4252;
-            --stat-bg: #2D3445;
-            --reset-btn: #FF7675;
-            --owned-bg: #2D3445;
-            --owned-text: #7F8C8D;
-        }
+    body.dark {
+        --primary: #A29BFE;
+        --primary-dark: #847BFF;
+        --secondary: #55EFC4;
+        --accent: #FF9FF3;
+        --text: #ECF0F1;
+        --text-light: #B2BEC3;
+        --bg: #1A1E2C;
+        --card-bg: #252A3A;
+        --border: #3B4252;
+        --stat-bg: #2D3445;
+        --reset-btn: #FF7675;
+        --owned-bg: #2D3445;
+        --owned-text: #7F8C8D;
     }
 
     .container {
@@ -732,6 +730,51 @@
         #clickButton { width: 220px; height: 220px; font-size: 2rem; }
         .upgrades-container { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
     }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .toggle-switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
 </style>
 </head>
 <body>
@@ -761,6 +804,14 @@
                 <div class="stat">
                     <span class="stat-name">Множитель очков:</span>
                     <span class="stat-value" id="multiplierStat">1x</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Всего кликов:</span>
+                    <span class="stat-value" id="totalClicksStat">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-name">Всего очков заработано:</span>
+                    <span class="stat-value" id="totalPointsStat">0</span>
                 </div>
             </div>
         </div>
@@ -806,6 +857,8 @@
         </div>
     </div>
 
+    <audio id="clickSound" src="https://www.soundjay.com/buttons/button-3.mp3" preload="auto"></audio>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -816,7 +869,9 @@
                 clicker: "Кликер", upgrades: "Улучшения", settings: "Настройки",
                 clickButton: "КЛИК!", points: "очков", upgrade: "Улучшить", bought: "Куплено", activated: "Активировано!",
                 perClick: "Очков за клик:", perSecond: "Очков в секунду:", multiplier: "Множитель очков:",
+                totalClicks: "Всего кликов:", totalPoints: "Всего очков заработано:",
                 settingsTitle: "Настройки", colorTheme: "Цветовая тема",
+                theme: "Тема (Тёмная/Светлая)",
                 gameManagement: "Управление игрой", resetProgress: "Сбросить прогресс", enterCheat: "Ввести промокод",
                 cheatSuccess: "Промокод активирован!", cheatInvalid: "Неверный промокод", cheatUsed: "Этот промокод уже использован",
                 resetConfirm: "Вы уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.",
@@ -840,7 +895,9 @@
             ruby: { primary: '#E74C3C', secondary: '#C0392B', accent: '#9B59B6', price: 5000 },
             sapphire: { primary: '#3498DB', secondary: '#2980B9', accent: '#2ECC71', price: 5000 },
             amethyst: { primary: '#9B59B6', secondary: '#8E44AD', accent: '#E74C3C', price: 5000 },
-            midnight: { primary: '#2C3E50', secondary: '#34495E', accent: '#7F8C8D', price: 5000 }
+            midnight: { primary: '#2C3E50', secondary: '#34495E', accent: '#7F8C8D', price: 5000 },
+            cyan: { primary: '#00FFFF', secondary: '#20B2AA', accent: '#FF4500', price: 2000 },
+            lime: { primary: '#32CD32', secondary: '#228B22', accent: '#FFD700', price: 2000 }
         };
         
         const cheats = {
@@ -881,17 +938,33 @@
                     gameState.score += 1000000;
                     gameState.totalPoints += 1000000;
                 }
+            },
+            '1234': {
+                name: "Бонус очки",
+                used: false,
+                effect: () => {
+                    gameState.score += 500000;
+                    gameState.totalPoints += 500000;
+                }
+            },
+            '5678': {
+                name: "Удвоение множителя",
+                used: false,
+                effect: () => {
+                    gameState.globalMultiplier *= 2;
+                }
             }
         };
         
         let gameState = {
             score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-            globalMultiplier: 1, colorScheme: 'purple', language: 'ru',
+            globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false,
             upgrades: {
                 clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
-                clickPower4: { owned: false }, clickPower5: { owned: false },
+                clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
                 autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
-                autoClicker4: { owned: false }, autoClicker5: { owned: false },
+                autoClicker4: { owned: false }, autoClicker5: { owned: false }, autoClicker6: { owned: false },
+                multiplier1: { owned: false }, multiplier2: { owned: false },
                 secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
             },
             usedPromoCodes: [],
@@ -904,12 +977,16 @@
             clickPower2: { cost: 500, effect: () => { gameState.clickPower *= 2; }, type: 'click' },
             clickPower3: { cost: 2500, effect: () => { gameState.clickPower *= 3; }, type: 'click' },
             clickPower4: { cost: 10000, effect: () => { gameState.clickPower *= 5; }, type: 'click' },
-            clickPower5: { cost: 50, effect: () => { gameState.clickPower *= 10; }, type: 'click' },
+            clickPower5: { cost: 50000, effect: () => { gameState.clickPower *= 10; }, type: 'click' },
+            clickPower6: { cost: 200000, effect: () => { gameState.clickPower *= 20; }, type: 'click' },
             autoClicker1: { cost: 250, effect: () => { gameState.autoClickers += 1; }, type: 'auto' },
             autoClicker2: { cost: 1250, effect: () => { gameState.autoClickers += 2; }, type: 'auto' },
             autoClicker3: { cost: 6250, effect: () => { gameState.autoClickers += 5; }, type: 'auto' },
             autoClicker4: { cost: 25000, effect: () => { gameState.autoClickers += 10; }, type: 'auto' },
-            autoClicker5: { cost: 100000, effect: () => { gameState.autoClickers += 20; }, type: 'auto' }
+            autoClicker5: { cost: 100000, effect: () => { gameState.autoClickers += 20; }, type: 'auto' },
+            autoClicker6: { cost: 500000, effect: () => { gameState.autoClickers += 50; }, type: 'auto' },
+            multiplier1: { cost: 1000, effect: () => { gameState.globalMultiplier *= 1.2; }, type: 'multiplier' },
+            multiplier2: { cost: 10000, effect: () => { gameState.globalMultiplier *= 1.5; }, type: 'multiplier' }
         };
         
         const DOM = {
@@ -922,7 +999,8 @@
             cheatSubmit: document.getElementById('cheatSubmit'),
             cheatCancel: document.getElementById('cheatCancel'),
             cheatBackspace: document.getElementById('cheatBackspace'),
-            cheatClear: document.getElementById('cheatClear')
+            cheatClear: document.getElementById('cheatClear'),
+            clickSound: document.getElementById('clickSound')
         };
         
         function initGame() {
@@ -1020,6 +1098,13 @@
                 setTimeout(() => {
                     DOM.clickButton.style.animation = 'pulse 2s infinite';
                 }, 300);
+            }
+            
+            DOM.clickSound.play().catch(() => {}); // Play sound if possible
+            
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('light');
+            }
             
             updateUI();
         }
@@ -1055,6 +1140,13 @@
             }
         }
         
+        function toggleDarkMode() {
+            gameState.darkMode = !gameState.darkMode;
+            document.body.classList.toggle('dark', gameState.darkMode);
+            renderSettings();
+            saveGame();
+        }
+        
         function updateUI() {
             const t = translations[gameState.language];
             
@@ -1067,6 +1159,8 @@
             document.getElementById('perClickStat').textContent = formatNumber(Math.round(gameState.clickPower * gameState.globalMultiplier));
             document.getElementById('perSecondStat').textContent = formatNumber(Math.round(gameState.autoClickers * gameState.autoClickPower * gameState.globalMultiplier));
             document.getElementById('multiplierStat').textContent = gameState.globalMultiplier.toFixed(1) + 'x';
+            document.getElementById('totalClicksStat').textContent = formatNumber(gameState.totalClicks);
+            document.getElementById('totalPointsStat').textContent = formatNumber(gameState.totalPoints);
         }
         
         function renderUpgrades(sortType = 'expensive') {
@@ -1095,6 +1189,10 @@
                     desc: 'Увеличивает очки за клик в 10 раз', owned: gameState.upgrades.clickPower5.owned, type: 'click'
                 },
                 {
+                    id: 'clickPower6', name: 'Мифический палец', cost: 200000, 
+                    desc: 'Увеличивает очки за клик в 20 раз', owned: gameState.upgrades.clickPower6.owned, type: 'click'
+                },
+                {
                     id: 'autoClicker1', name: 'Автокликер I', cost: 250, 
                     desc: 'Автоматически кликает 1 раз в секунду', owned: gameState.upgrades.autoClicker1.owned, type: 'auto'
                 },
@@ -1113,6 +1211,18 @@
                 {
                     id: 'autoClicker5', name: 'Автокликер V', cost: 100000, 
                     desc: 'Автоматически кликает 20 раз в секунду', owned: gameState.upgrades.autoClicker5.owned, type: 'auto'
+                },
+                {
+                    id: 'autoClicker6', name: 'Автокликер VI', cost: 500000, 
+                    desc: 'Автоматически кликает 50 раз в секунду', owned: gameState.upgrades.autoClicker6.owned, type: 'auto'
+                },
+                {
+                    id: 'multiplier1', name: 'Множитель I', cost: 1000, 
+                    desc: 'Увеличивает глобальный множитель на 20%', owned: gameState.upgrades.multiplier1.owned, type: 'multiplier'
+                },
+                {
+                    id: 'multiplier2', name: 'Множитель II', cost: 10000, 
+                    desc: 'Увеличивает глобальный множитель на 50%', owned: gameState.upgrades.multiplier2.owned, type: 'multiplier'
                 }
             ];
             
@@ -1139,11 +1249,11 @@
             
             // Sort upgrades
             if (sortType === 'expensive') {
-                filteredUpgrades.sort((a, b) => b.cost - a.cost);
+                filteredUpgrades.sort((a, b) => (b.cost || 0) - (a.cost || 0));
             } else if (sortType === 'cheap') {
-                filteredUpgrades.sort((a, b) => a.cost - b.cost);
+                filteredUpgrades.sort((a, b) => (a.cost || 0) - (b.cost || 0));
             } else if (sortType === 'available') {
-                filteredUpgrades.sort((a, b) => a.cost - b.cost);
+                filteredUpgrades.sort((a, b) => (a.cost || 0) - (b.cost || 0));
             }
             
             filteredUpgrades.forEach(up => {
@@ -1205,6 +1315,13 @@
                     </div>
                 </div>
                 <div class="settings-section">
+                    <h3>${t.theme}</h3>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${gameState.darkMode ? 'checked' : ''} onclick="toggleDarkMode()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-section">
                     <h3>${t.gameManagement}</h3>
                     <button class="reset-btn" onclick="resetProgress()">${t.resetProgress}</button>
                     <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
@@ -1234,6 +1351,7 @@
             renderUpgrades();
             renderSettings();
             applyColorScheme();
+            document.body.classList.toggle('dark', gameState.darkMode);
         }
 
         function applyColorScheme() {
@@ -1307,12 +1425,13 @@
             if (confirm(t.resetConfirm)) {
                 gameState = {
                     score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-                    globalMultiplier: 1, colorScheme: 'purple', language: 'ru',
+                    globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false,
                     upgrades: {
                         clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
-                        clickPower4: { owned: false }, clickPower5: { owned: false },
+                        clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
                         autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
-                        autoClicker4: { owned: false }, autoClicker5: { owned: false },
+                        autoClicker4: { owned: false }, autoClicker5: { owned: false }, autoClicker6: { owned: false },
+                        multiplier1: { owned: false }, multiplier2: { owned: false },
                         secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
                     },
                     usedPromoCodes: [],
@@ -1348,7 +1467,8 @@
                     },
                     usedPromoCodes: loaded.usedPromoCodes || [],
                     unlockedColors: loaded.unlockedColors || ['purple'],
-                    totalPoints: loaded.totalPoints || 0
+                    totalPoints: loaded.totalPoints || 0,
+                    darkMode: loaded.darkMode || false
                 };
                 
                 if (loaded.usedPromoCodes) {
@@ -1366,6 +1486,7 @@
         window.buyColorScheme = buyColorScheme;
         window.resetProgress = resetProgress;
         window.showCheatInput = showCheatInput;
+        window.toggleDarkMode = toggleDarkMode;
     </script>
 </body>
 </html>
