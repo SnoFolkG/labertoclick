@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -208,14 +209,14 @@
         letter-spacing: -1px;
     }
     
-    .upgrades-container {
+    .upgrades-container, .collections-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 15px;
         margin-top: 15px;
     }
     
-    .upgrade {
+    .upgrade, .collectible {
         background: var(--card-bg);
         border-radius: var(--radius-md);
         padding: 16px;
@@ -225,21 +226,21 @@
         border: 1px solid var(--border);
     }
     
-    .upgrade:hover {
+    .upgrade:hover, .collectible:hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow-md);
     }
     
-    .upgrade.owned {
+    .upgrade.owned, .collectible.owned {
         background: var(--owned-bg);
         order: 1;
     }
     
-    .upgrade.owned .upgrade-name {
+    .upgrade.owned .upgrade-name, .collectible.owned .collectible-name {
         color: var(--owned-text);
     }
     
-    .upgrade.owned .upgrade-desc {
+    .upgrade.owned .upgrade-desc, .collectible.owned .collectible-desc {
         color: var(--owned-text);
     }
     
@@ -249,38 +250,51 @@
         border: 1px solid var(--owned-text);
     }
     
-    .upgrade.premium {
+    .upgrade.premium, .collectible.common {
         border-left: 4px solid var(--premium);
     }
     
-    .upgrade.special-upgrade {
+    .upgrade.special-upgrade, .collectible.rare {
         border-left: 4px solid var(--accent);
     }
     
-    .upgrade.legendary {
+    .upgrade.legendary, .collectible.epic {
         border-left: 4px solid var(--legendary);
         animation: glow 2s infinite alternate;
     }
     
-    .upgrade-header {
+    .collectible.legendary {
+        border-left: 4px solid #FFD700;
+        animation: glow 2s infinite alternate;
+    }
+    
+    .upgrade-header, .collectible-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 12px;
     }
     
-    .upgrade-name {
+    .upgrade-name, .collectible-name {
         font-weight: 700;
         font-size: clamp(1rem, 3.5vw, 1.15rem);
         color: var(--primary);
     }
     
-    .upgrade-name.premium {
+    .upgrade-name.premium, .collectible-name.common {
         color: var(--premium);
     }
     
-    .upgrade-name.legendary {
+    .upgrade-name.legendary, .collectible-name.legendary {
         color: var(--legendary);
+    }
+    
+    .collectible-name.rare {
+        color: var(--secondary);
+    }
+    
+    .collectible-name.epic {
+        color: #9B59B6;
     }
     
     .upgrade-cost {
@@ -302,7 +316,7 @@
         color: white;
     }
     
-    .upgrade-desc {
+    .upgrade-desc, .collectible-desc {
         color: var(--text-light);
         margin-bottom: 16px;
         font-size: clamp(0.85rem, 3vw, 0.95rem);
@@ -811,6 +825,7 @@
         <div class="tabs">
             <div class="tab active" data-tab="clicker">Кликер</div>
             <div class="tab" data-tab="upgrades">Улучшения</div>
+            <div class="tab" data-tab="collections">Коллекции</div>
             <div class="tab" data-tab="settings">Настройки</div>
         </div>
         
@@ -838,6 +853,10 @@
                     <span class="stat-name">Всего очков заработано:</span>
                     <span class="stat-value" id="totalPointsStat">0</span>
                 </div>
+                <div class="stat">
+                    <span class="stat-name">Коллекционные предметы:</span>
+                    <span class="stat-value" id="totalCollectiblesStat">0</span>
+                </div>
             </div>
         </div>
         
@@ -849,6 +868,12 @@
                 <button class="sort-btn" data-sort="available">Доступные</button>
             </div>
             <div class="upgrades-container" id="upgradesList"></div>
+        </div>
+        
+        <div class="tab-content" id="collections-tab">
+            <h2>Коллекции</h2>
+            <p>Собирайте редкие предметы, которые падают случайно при кликах! Каждый предмет даёт уникальный бонус.</p>
+            <div class="collections-container" id="collectionsList"></div>
         </div>
         
         <div class="tab-content" id="settings-tab">
@@ -885,6 +910,7 @@
     <audio id="clickSound" src="https://www.soundjay.com/buttons/button-10.mp3" preload="auto"></audio>
     <audio id="buySound" src="https://www.soundjay.com/buttons/button-17.mp3" preload="auto"></audio>
     <audio id="prestigeSound" src="https://www.soundjay.com/buttons/button-4.mp3" preload="auto"></audio>
+    <audio id="collectSound" src="https://www.soundjay.com/buttons/button-7.mp3" preload="auto"></audio>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -893,10 +919,10 @@
         
         const translations = {
             ru: {
-                clicker: "Кликер", upgrades: "Улучшения", settings: "Настройки",
+                clicker: "Кликер", upgrades: "Улучшения", collections: "Коллекции", settings: "Настройки",
                 clickButton: "КЛИК!", points: "очков", upgrade: "Улучшить", bought: "Куплено", activated: "Активировано!",
                 perClick: "Очков за клик:", perSecond: "Очков в секунду:", multiplier: "Множитель очков:",
-                totalClicks: "Всего кликов:", totalPoints: "Всего очков заработано:",
+                totalClicks: "Всего кликов:", totalPoints: "Всего очков заработано:", totalCollectibles: "Коллекционные предметы:",
                 settingsTitle: "Настройки", colorTheme: "Цветовая тема",
                 theme: "Тёмная тема",
                 gameManagement: "Управление игрой", resetProgress: "Сбросить прогресс", enterCheat: "Ввести промокод",
@@ -908,7 +934,8 @@
                 resetSuccess: "Прогресс успешно сброшен!",
                 prestigeSuccess: "Престиж активирован! Множитель увеличен.",
                 usedPromos: "Использованные промокоды", noPromosUsed: "Промокоды не использовались",
-                expensive: "Дороже", cheap: "Дешевле", available: "Доступные"
+                expensive: "Дороже", cheap: "Дешевле", available: "Доступные",
+                collected: "Собрано", notCollected: "Не собрано", collectedBonus: "Бонус:", collectibleObtained: "Получен коллекционный предмет:"
             }
         };
         
@@ -987,6 +1014,20 @@
             }
         };
         
+        const collectibles = {
+            coin1: { name: 'Старая монета', desc: '+1% к множителю очков', rarity: 'common', effect: () => { gameState.globalMultiplier *= 1.01; } },
+            gem1: { name: 'Зелёный самоцвет', desc: '+0.5 очков в секунду', rarity: 'rare', effect: () => { gameState.autoClickPower += 0.5; } },
+            artifact1: { name: 'Древний артефакт', desc: '+5% к очкам за клик', rarity: 'epic', effect: () => { gameState.clickPower *= 1.05; } },
+            relic1: { name: 'Реликвия богов', desc: '+10% ко всем бонусам', rarity: 'legendary', effect: () => { gameState.globalMultiplier *= 1.10; } },
+            ring1: { name: 'Кольцо удачи', desc: '+2% шанс на критический клик', rarity: 'common', effect: () => { /* Implement if critical chance is adjustable */ } },
+            amulet1: { name: 'Амулет силы', desc: '+1 автокликер', rarity: 'rare', effect: () => { gameState.autoClickers += 1; } },
+            sword1: { name: 'Меч героя', desc: '+10% к очкам за клик', rarity: 'epic', effect: () => { gameState.clickPower *= 1.10; } },
+            crown1: { name: 'Корона короля', desc: '+20% к множителю', rarity: 'legendary', effect: () => { gameState.globalMultiplier *= 1.20; } },
+            book1: { name: 'Книга тайн', desc: '+2% к множителю очков', rarity: 'common', effect: () => { gameState.globalMultiplier *= 1.02; } },
+            potion1: { name: 'Зелье скорости', desc: '+1 очко в секунду', rarity: 'rare', effect: () => { gameState.autoClickPower += 1; } }
+            // Add more as needed for a major update
+        };
+        
         let gameState = {
             score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
             globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false,
@@ -998,11 +1039,14 @@
                 multiplier1: { owned: false }, multiplier2: { owned: false },
                 secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
             },
+            collectibles: {}, // {id: {owned: true}}
             achievements: {
                 firstClick: { unlocked: false, name: 'Первый клик', desc: 'Сделайте первый клик' },
                 hundredClicks: { unlocked: false, name: 'Сто кликов', desc: 'Сделайте 100 кликов' },
                 millionPoints: { unlocked: false, name: 'Миллионер', desc: 'Заработайте 1,000,000 очков' },
-                allUpgrades: { unlocked: false, name: 'Коллекционер', desc: 'Купите все улучшения' }
+                allUpgrades: { unlocked: false, name: 'Коллекционер', desc: 'Купите все улучшения' },
+                firstCollectible: { unlocked: false, name: 'Первый артефакт', desc: 'Соберите первый коллекционный предмет' },
+                tenCollectibles: { unlocked: false, name: 'Коллекционер артефактов', desc: 'Соберите 10 коллекционных предметов' }
             },
             prestigeCount: 0,
             usedPromoCodes: [],
@@ -1031,6 +1075,7 @@
             score: document.getElementById('score'),
             clickButton: document.getElementById('clickButton'),
             upgradesList: document.getElementById('upgradesList'),
+            collectionsList: document.getElementById('collectionsList'),
             settingsContent: document.getElementById('settingsContent'),
             cheatContainer: document.getElementById('cheatContainer'),
             cheatInput: document.getElementById('cheatInput'),
@@ -1040,7 +1085,8 @@
             cheatClear: document.getElementById('cheatClear'),
             clickSound: document.getElementById('clickSound'),
             buySound: document.getElementById('buySound'),
-            prestigeSound: document.getElementById('prestigeSound')
+            prestigeSound: document.getElementById('prestigeSound'),
+            collectSound: document.getElementById('collectSound')
         };
         
         function initGame() {
@@ -1147,8 +1193,29 @@
                 tg.HapticFeedback.impactOccurred('light');
             }
             
+            // Chance to drop collectible (1% base, increases with upgrades or prestige)
+            const dropChance = 0.01 + (gameState.prestigeCount * 0.005);
+            if (Math.random() < dropChance) {
+                dropCollectible();
+            }
+            
             updateUI();
             checkAchievements();
+        }
+        
+        function dropCollectible() {
+            const keys = Object.keys(collectibles);
+            const randomId = keys[Math.floor(Math.random() * keys.length)];
+            
+            if (!gameState.collectibles[randomId] || !gameState.collectibles[randomId].owned) {
+                gameState.collectibles[randomId] = { owned: true };
+                collectibles[randomId].effect();
+                DOM.collectSound.play().catch(() => {});
+                alert(translations[gameState.language].collectibleObtained + ' ' + collectibles[randomId].name + '!\n' + collectibles[randomId].desc);
+                renderCollections();
+                checkAchievements();
+                saveGame();
+            }
         }
         
         function buyUpgrade(id) {
@@ -1223,6 +1290,15 @@
                 gameState.achievements.allUpgrades.unlocked = true;
                 gameState.globalMultiplier *= 1.5;
             }
+            const ownedCollectibles = Object.values(gameState.collectibles).filter(c => c.owned).length;
+            if (ownedCollectibles >= 1 && !gameState.achievements.firstCollectible.unlocked) {
+                gameState.achievements.firstCollectible.unlocked = true;
+                gameState.globalMultiplier *= 1.05;
+            }
+            if (ownedCollectibles >= 10 && !gameState.achievements.tenCollectibles.unlocked) {
+                gameState.achievements.tenCollectibles.unlocked = true;
+                gameState.globalMultiplier *= 1.1;
+            }
         }
         
         function updateUI() {
@@ -1239,6 +1315,7 @@
             document.getElementById('multiplierStat').textContent = gameState.globalMultiplier.toFixed(1) + 'x';
             document.getElementById('totalClicksStat').textContent = formatNumber(gameState.totalClicks);
             document.getElementById('totalPointsStat').textContent = formatNumber(gameState.totalPoints);
+            document.getElementById('totalCollectiblesStat').textContent = formatNumber(Object.values(gameState.collectibles).filter(c => c.owned).length);
         }
         
         function renderUpgrades(sortType = 'expensive') {
@@ -1364,6 +1441,27 @@
 
             DOM.upgradesList.innerHTML = html;
         }
+        
+        function renderCollections() {
+            const t = translations[gameState.language];
+            let html = '';
+            
+            Object.entries(collectibles).forEach(([id, col]) => {
+                const owned = gameState.collectibles[id]?.owned || false;
+                html += `
+                    <div class="collectible ${owned ? 'owned' : ''} ${col.rarity}">
+                        <div class="collectible-header">
+                            <span class="collectible-name ${col.rarity}">${col.name}</span>
+                            <span class="collectible-cost">${owned ? t.collected : t.notCollected}</span>
+                        </div>
+                        <div class="collectible-desc">${col.desc}</div>
+                        <div class="collectible-desc">${t.collectedBonus} ${col.desc}</div>
+                    </div>
+                `;
+            });
+            
+            DOM.collectionsList.innerHTML = html;
+        }
 
         function renderSettings() {
             const t = translations[gameState.language];
@@ -1444,6 +1542,7 @@
         function renderAll() {
             updateUI();
             renderUpgrades();
+            renderCollections();
             renderSettings();
             applyColorScheme();
             document.body.classList.toggle('dark', gameState.darkMode);
@@ -1530,11 +1629,14 @@
                         multiplier1: { owned: false }, multiplier2: { owned: false },
                         secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
                     },
+                    collectibles: {},
                     achievements: {
                         firstClick: { unlocked: false, name: 'Первый клик', desc: 'Сделайте первый клик' },
                         hundredClicks: { unlocked: false, name: 'Сто кликов', desc: 'Сделайте 100 кликов' },
                         millionPoints: { unlocked: false, name: 'Миллионер', desc: 'Заработайте 1,000,000 очков' },
-                        allUpgrades: { unlocked: false, name: 'Коллекционер', desc: 'Купите все улучшения' }
+                        allUpgrades: { unlocked: false, name: 'Коллекционер', desc: 'Купите все улучшения' },
+                        firstCollectible: { unlocked: false, name: 'Первый артефакт', desc: 'Соберите первый коллекционный предмет' },
+                        tenCollectibles: { unlocked: false, name: 'Коллекционер артефактов', desc: 'Соберите 10 коллекционных предметов' }
                     },
                     prestigeCount: isPrestige ? oldPrestige : 0,
                     usedPromoCodes: [],
@@ -1568,6 +1670,7 @@
                         ...gameState.upgrades,
                         ...loaded.upgrades
                     },
+                    collectibles: loaded.collectibles || {},
                     achievements: {
                         ...gameState.achievements,
                         ...loaded.achievements
@@ -1578,6 +1681,13 @@
                     darkMode: loaded.darkMode || false,
                     prestigeCount: loaded.prestigeCount || 0
                 };
+                
+                // Re-apply collectible effects on load
+                Object.entries(gameState.collectibles).forEach(([id, c]) => {
+                    if (c.owned && collectibles[id]) {
+                        collectibles[id].effect();
+                    }
+                });
                 
                 if (loaded.usedPromoCodes) {
                     loaded.usedPromoCodes.forEach(code => {
@@ -1599,3 +1709,4 @@
     </script>
 </body>
 </html>
+```
