@@ -64,11 +64,6 @@
     }
     
     body.dark {
-        --primary: #A29BFE;
-        --primary-dark: #847BFF;
-        --primary-rgb: 162, 155, 254;
-        --secondary: #55EFC4;
-        --accent: #FF9FF3;
         --text: #ECF0F1;
         --text-light: #B2BEC3;
         --bg: #1A1E2C;
@@ -477,7 +472,7 @@
         font-weight: bold;
     }
     
-    .reset-btn, .cheat-submit {
+    .reset-btn, .cheat-submit, .donate-btn {
         padding: 12px;
         border: none;
         border-radius: var(--radius-sm);
@@ -494,11 +489,18 @@
         color: white;
     }
     
-    .reset-btn:hover {
+    .donate-btn {
+        width: 100%;
+        background: var(--secondary);
+        color: white;
+        margin-top: 10px;
+    }
+    
+    .reset-btn:hover, .donate-btn:hover {
         opacity: 0.9;
     }
     
-    .reset-btn:active {
+    .reset-btn:active, .donate-btn:active {
         transform: translateY(1px);
     }
     
@@ -924,8 +926,10 @@
                 totalClicks: "Всего кликов:", totalPoints: "Всего очков заработано:", totalCollectibles: "Коллекционные предметы:",
                 settingsTitle: "Настройки", colorTheme: "Цветовая тема",
                 theme: "Тёмная тема",
+                sound: "Звук",
                 gameManagement: "Управление игрой", resetProgress: "Сбросить прогресс", enterCheat: "Ввести промокод",
                 prestige: "Престиж (сброс с бонусом)",
+                donate: "Донат с Telegram Stars",
                 achievements: "Достижения",
                 cheatSuccess: "Промокод активирован!", cheatInvalid: "Неверный промокод", cheatUsed: "Этот промокод уже использован",
                 resetConfirm: "Вы уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.",
@@ -1029,7 +1033,7 @@
         
         let gameState = {
             score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-            globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false,
+            globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
             upgrades: {
                 clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
                 clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
@@ -1186,7 +1190,7 @@
                 }, 300);
             }
             
-            DOM.clickSound.play().catch(() => {});
+            if (gameState.soundEnabled) DOM.clickSound.play().catch(() => {});
             
             if (tg && tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('light');
@@ -1209,7 +1213,7 @@
             if (!gameState.collectibles[randomId] || !gameState.collectibles[randomId].owned) {
                 gameState.collectibles[randomId] = { owned: true };
                 collectibles[randomId].effect();
-                DOM.collectSound.play().catch(() => {});
+                if (gameState.soundEnabled) DOM.collectSound.play().catch(() => {});
                 alert(translations[gameState.language].collectibleObtained + ' ' + collectibles[randomId].name + '!\n' + collectibles[randomId].desc);
                 renderCollections();
                 checkAchievements();
@@ -1226,7 +1230,7 @@
                 gameState.upgrades[id].owned = true;
                 upgrade.effect();
                 
-                DOM.buySound.play().catch(() => {});
+                if (gameState.soundEnabled) DOM.buySound.play().catch(() => {});
                 
                 renderUpgrades();
                 updateUI();
@@ -1254,6 +1258,13 @@
         function toggleDarkMode() {
             gameState.darkMode = !gameState.darkMode;
             document.body.classList.toggle('dark', gameState.darkMode);
+            applyColorScheme();
+            renderSettings();
+            saveGame();
+        }
+
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
             renderSettings();
             saveGame();
         }
@@ -1265,7 +1276,7 @@
                 resetProgress(true);
                 gameState.globalMultiplier *= 2 + (gameState.prestigeCount * 0.5);
                 gameState.prestigeCount++;
-                DOM.prestigeSound.play().catch(() => {});
+                if (gameState.soundEnabled) DOM.prestigeSound.play().catch(() => {});
                 alert(t.prestigeSuccess);
                 renderAll();
                 saveGame();
@@ -1495,6 +1506,13 @@
                     </label>
                 </div>
                 <div class="settings-section">
+                    <h3>${t.sound}</h3>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${gameState.soundEnabled ? 'checked' : ''} onclick="toggleSound()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-section">
                     <h3>${t.achievements}</h3>
                     <div id="achievementsList"></div>
                 </div>
@@ -1505,6 +1523,7 @@
                     <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
                         ${t.enterCheat}
                     </button>
+                    <button class="donate-btn" onclick="showDonatePopup()">${t.donate}</button>
                 </div>
             `;
             
@@ -1523,6 +1542,24 @@
             
             DOM.settingsContent.innerHTML = html;
             renderAchievements();
+        }
+
+        function showDonatePopup() {
+            tg.showPopup({
+                title: 'Донат',
+                message: 'Поддержите игру Telegram Stars!',
+                buttons: [
+                    {id: '10', type: 'default', text: '10 ⭐'},
+                    {id: '50', type: 'default', text: '50 ⭐'},
+                    {id: '100', type: 'default', text: '100 ⭐'},
+                    {type: 'cancel'}
+                ]
+            }, (buttonId) => {
+                if (buttonId) {
+                    tg.sendData(JSON.stringify({action: 'donate', amount: parseInt(buttonId)}));
+                    tg.showAlert('Запрос на донат отправлен боту.');
+                }
+            });
         }
 
         function renderAchievements() {
@@ -1549,13 +1586,21 @@
 
         function applyColorScheme() {
             const scheme = colorSchemes[gameState.colorScheme];
-            document.documentElement.style.setProperty('--primary', scheme.primary);
-            document.documentElement.style.setProperty('--primary-dark', shadeColor(scheme.primary, -20));
-            document.documentElement.style.setProperty('--secondary', scheme.secondary);
-            document.documentElement.style.setProperty('--accent', scheme.accent);
-            document.documentElement.style.setProperty('--primary-rgb', hexToRgb(scheme.primary));
+            let primary = scheme.primary;
+            let secondary = scheme.secondary;
+            let accent = scheme.accent;
+            if (gameState.darkMode) {
+                primary = shadeColor(primary, -30);
+                secondary = shadeColor(secondary, -30);
+                accent = shadeColor(accent, -30);
+            }
+            document.documentElement.style.setProperty('--primary', primary);
+            document.documentElement.style.setProperty('--primary-dark', shadeColor(primary, -20));
+            document.documentElement.style.setProperty('--secondary', secondary);
+            document.documentElement.style.setProperty('--accent', accent);
+            document.documentElement.style.setProperty('--primary-rgb', hexToRgb(primary));
             
-            DOM.clickButton.style.background = scheme.primary;
+            DOM.clickButton.style.background = primary;
         }
         
         function hexToRgb(hex) {
@@ -1619,7 +1664,7 @@
                 const oldPrestige = gameState.prestigeCount;
                 gameState = {
                     score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-                    globalMultiplier: isPrestige ? oldMultiplier : 1, colorScheme: 'purple', language: 'ru', darkMode: false,
+                    globalMultiplier: isPrestige ? oldMultiplier : 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
                     upgrades: {
                         clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
                         clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
@@ -1678,6 +1723,7 @@
                     unlockedColors: loaded.unlockedColors || ['purple'],
                     totalPoints: loaded.totalPoints || 0,
                     darkMode: loaded.darkMode || false,
+                    soundEnabled: loaded.soundEnabled !== undefined ? loaded.soundEnabled : true,
                     prestigeCount: loaded.prestigeCount || 0
                 };
                 
@@ -1704,6 +1750,7 @@
         window.resetProgress = resetProgress;
         window.showCheatInput = showCheatInput;
         window.toggleDarkMode = toggleDarkMode;
+        window.toggleSound = toggleSound;
         window.prestige = prestige;
     </script>
 </body>
