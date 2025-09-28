@@ -64,6 +64,11 @@
     }
     
     body.dark {
+        --primary: #A29BFE;
+        --primary-dark: #847BFF;
+        --primary-rgb: 162, 155, 254;
+        --secondary: #55EFC4;
+        --accent: #FF9FF3;
         --text: #ECF0F1;
         --text-light: #B2BEC3;
         --bg: #1A1E2C;
@@ -73,6 +78,8 @@
         --reset-btn: #FF7675;
         --owned-bg: #2D3445;
         --owned-text: #7F8C8D;
+        --premium: #FDCB6E;
+        --legendary: #E84393;
     }
 
     .container {
@@ -472,7 +479,7 @@
         font-weight: bold;
     }
     
-    .reset-btn, .cheat-submit, .donate-btn {
+    .reset-btn, .cheat-submit {
         padding: 12px;
         border: none;
         border-radius: var(--radius-sm);
@@ -489,18 +496,11 @@
         color: white;
     }
     
-    .donate-btn {
-        width: 100%;
-        background: var(--secondary);
-        color: white;
-        margin-top: 10px;
-    }
-    
-    .reset-btn:hover, .donate-btn:hover {
+    .reset-btn:hover {
         opacity: 0.9;
     }
     
-    .reset-btn:active, .donate-btn:active {
+    .reset-btn:active {
         transform: translateY(1px);
     }
     
@@ -929,7 +929,6 @@
                 sound: "Звук",
                 gameManagement: "Управление игрой", resetProgress: "Сбросить прогресс", enterCheat: "Ввести промокод",
                 prestige: "Престиж (сброс с бонусом)",
-                donate: "Донат с Telegram Stars",
                 achievements: "Достижения",
                 cheatSuccess: "Промокод активирован!", cheatInvalid: "Неверный промокод", cheatUsed: "Этот промокод уже использован",
                 resetConfirm: "Вы уверены, что хотите сбросить весь прогресс? Это действие нельзя отменить.",
@@ -1022,25 +1021,28 @@
             gem1: { name: 'Зелёный самоцвет', desc: '+0.5 очков в секунду', rarity: 'rare', effect: () => { gameState.autoClickPower += 0.5; } },
             artifact1: { name: 'Древний артефакт', desc: '+5% к очкам за клик', rarity: 'epic', effect: () => { gameState.clickPower *= 1.05; } },
             relic1: { name: 'Реликвия богов', desc: '+10% ко всем бонусам', rarity: 'legendary', effect: () => { gameState.globalMultiplier *= 1.10; } },
-            ring1: { name: 'Кольцо удачи', desc: '+2% шанс на критический клик', rarity: 'common', effect: () => { /* Implement if critical chance is adjustable */ } },
+            ring1: { name: 'Кольцо удачи', desc: '+2% шанс на критический клик', rarity: 'common', effect: () => { gameState.criticalChance += 0.02; } },
             amulet1: { name: 'Амулет силы', desc: '+1 автокликер', rarity: 'rare', effect: () => { gameState.autoClickers += 1; } },
             sword1: { name: 'Меч героя', desc: '+10% к очкам за клик', rarity: 'epic', effect: () => { gameState.clickPower *= 1.10; } },
             crown1: { name: 'Корона короля', desc: '+20% к множителю', rarity: 'legendary', effect: () => { gameState.globalMultiplier *= 1.20; } },
             book1: { name: 'Книга тайн', desc: '+2% к множителю очков', rarity: 'common', effect: () => { gameState.globalMultiplier *= 1.02; } },
             potion1: { name: 'Зелье скорости', desc: '+1 очко в секунду', rarity: 'rare', effect: () => { gameState.autoClickPower += 1; } }
-            // Add more as needed for a major update
         };
         
         let gameState = {
             score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
             globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
+            criticalChance: 0.15, dropBonus: 0,
             upgrades: {
                 clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
                 clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
                 autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
                 autoClicker4: { owned: false }, autoClicker5: { owned: false }, autoClicker6: { owned: false },
                 multiplier1: { owned: false }, multiplier2: { owned: false },
-                secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
+                secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false },
+                critical1: { owned: false }, critical2: { owned: false },
+                dropChance1: { owned: false }, dropChance2: { owned: false },
+                megaMultiplier: { owned: false }
             },
             collectibles: {}, // {id: {owned: true}}
             achievements: {
@@ -1071,7 +1073,12 @@
             autoClicker5: { cost: 100000, effect: () => { gameState.autoClickers += 20; }, type: 'auto' },
             autoClicker6: { cost: 500000, effect: () => { gameState.autoClickers += 50; }, type: 'auto' },
             multiplier1: { cost: 1000, effect: () => { gameState.globalMultiplier *= 1.2; }, type: 'multiplier' },
-            multiplier2: { cost: 10000, effect: () => { gameState.globalMultiplier *= 1.5; }, type: 'multiplier' }
+            multiplier2: { cost: 10000, effect: () => { gameState.globalMultiplier *= 1.5; }, type: 'multiplier' },
+            critical1: { cost: 1500, effect: () => { gameState.criticalChance += 0.05; }, type: 'critical' },
+            critical2: { cost: 7500, effect: () => { gameState.criticalChance += 0.1; }, type: 'critical' },
+            dropChance1: { cost: 3000, effect: () => { gameState.dropBonus += 0.005; }, type: 'drop' },
+            dropChance2: { cost: 15000, effect: () => { gameState.dropBonus += 0.01; }, type: 'drop' },
+            megaMultiplier: { cost: 1000000, effect: () => { gameState.globalMultiplier *= 3; }, type: 'multiplier' }
         };
         
         const DOM = {
@@ -1173,7 +1180,7 @@
                 clickEffect.remove();
             }, 800);
             
-            const isCritical = Math.random() < 0.15; // Increased critical chance
+            const isCritical = Math.random() < gameState.criticalChance;
             const multiplier = isCritical ? 5 * gameState.globalMultiplier : gameState.globalMultiplier;
             
             const points = Math.round(gameState.clickPower * multiplier);
@@ -1196,8 +1203,8 @@
                 tg.HapticFeedback.impactOccurred('light');
             }
             
-            // Chance to drop collectible (1% base, increases with upgrades or prestige)
-            const dropChance = 0.01 + (gameState.prestigeCount * 0.005);
+            // Chance to drop collectible
+            const dropChance = 0.01 + (gameState.prestigeCount * 0.005) + gameState.dropBonus;
             if (Math.random() < dropChance) {
                 dropCollectible();
             }
@@ -1214,7 +1221,7 @@
                 gameState.collectibles[randomId] = { owned: true };
                 collectibles[randomId].effect();
                 if (gameState.soundEnabled) DOM.collectSound.play().catch(() => {});
-                alert(translations[gameState.language].collectibleObtained + ' ' + collectibles[randomId].name + '!\n' + collectibles[randomId].desc);
+                tg.showAlert(translations[gameState.language].collectibleObtained + ' ' + collectibles[randomId].name + '!\n' + collectibles[randomId].desc);
                 renderCollections();
                 checkAchievements();
                 saveGame();
@@ -1272,15 +1279,17 @@
         function prestige() {
             const t = translations[gameState.language];
             if (gameState.score < 1000000) return;
-            if (confirm(t.prestigeConfirm)) {
-                resetProgress(true);
-                gameState.globalMultiplier *= 2 + (gameState.prestigeCount * 0.5);
-                gameState.prestigeCount++;
-                if (gameState.soundEnabled) DOM.prestigeSound.play().catch(() => {});
-                alert(t.prestigeSuccess);
-                renderAll();
-                saveGame();
-            }
+            tg.showConfirm(t.prestigeConfirm, (confirmed) => {
+                if (confirmed) {
+                    resetProgress(true);
+                    gameState.globalMultiplier *= 2 + (gameState.prestigeCount * 0.5);
+                    gameState.prestigeCount++;
+                    if (gameState.soundEnabled) DOM.prestigeSound.play().catch(() => {});
+                    tg.showAlert(t.prestigeSuccess);
+                    renderAll();
+                    saveGame();
+                }
+            });
         }
         
         function checkAchievements() {
@@ -1388,6 +1397,26 @@
                 {
                     id: 'multiplier2', name: 'Множитель II', cost: 10000, 
                     desc: 'Увеличивает глобальный множитель на 50%', owned: gameState.upgrades.multiplier2.owned, type: 'multiplier'
+                },
+                {
+                    id: 'critical1', name: 'Критический удар I', cost: 1500, 
+                    desc: '+5% шанс на критический клик', owned: gameState.upgrades.critical1.owned, type: 'critical'
+                },
+                {
+                    id: 'critical2', name: 'Критический удар II', cost: 7500, 
+                    desc: '+10% шанс на критический клик', owned: gameState.upgrades.critical2.owned, type: 'critical'
+                },
+                {
+                    id: 'dropChance1', name: 'Счастливый талисман I', cost: 3000, 
+                    desc: '+0.5% шанс дропа коллекционок', owned: gameState.upgrades.dropChance1.owned, type: 'drop'
+                },
+                {
+                    id: 'dropChance2', name: 'Счастливый талисман II', cost: 15000, 
+                    desc: '+1% шанс дропа коллекционок', owned: gameState.upgrades.dropChance2.owned, type: 'drop'
+                },
+                {
+                    id: 'megaMultiplier', name: 'Мега множитель', cost: 1000000, 
+                    desc: 'Увеличивает глобальный множитель в 3 раза', owned: gameState.upgrades.megaMultiplier.owned, type: 'multiplier', class: 'legendary'
                 }
             ];
             
@@ -1421,10 +1450,11 @@
             
             filteredUpgrades.forEach(up => {
                 const costText = typeof up.cost === 'number' ? up.cost.toLocaleString() : up.cost;
+                const upgradeClass = up.class || '';
                 
                 if (up.owned) {
                     html += `
-                        <div class="upgrade owned">
+                        <div class="upgrade owned ${upgradeClass}">
                             <div class="upgrade-header"><span class="upgrade-name">${up.name}</span><span class="upgrade-cost">${t.bought}</span></div>
                             <div class="upgrade-desc">${up.desc}</div>
                             <button class="upgrade-btn" disabled>${t.bought}</button>
@@ -1435,7 +1465,7 @@
                     const isSpecial = up.type === 'special';
                     
                     html += `
-                        <div class="upgrade ${isSpecial ? 'special-upgrade' : ''}">
+                        <div class="upgrade ${isSpecial ? 'special-upgrade' : ''} ${upgradeClass}">
                             <div class="upgrade-header">
                                 <span class="upgrade-name">${up.name}</span>
                                 <span class="upgrade-cost">${costText}</span>
@@ -1477,9 +1507,10 @@
             const t = translations[gameState.language];
             
             let html = `
-                <div class="settings-section">
-                    <h3>${t.colorTheme}</h3>
-                    <div class="color-options">
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h3>${t.colorTheme}</h3>
+                        <div class="color-options">
             `;
             
             Object.keys(colorSchemes).forEach(scheme => {
@@ -1496,35 +1527,34 @@
             });
             
             html += `
+                        </div>
                     </div>
-                </div>
-                <div class="settings-section">
-                    <h3>${t.theme}</h3>
-                    <label class="toggle-switch">
-                        <input type="checkbox" ${gameState.darkMode ? 'checked' : ''} onclick="toggleDarkMode()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-section">
-                    <h3>${t.sound}</h3>
-                    <label class="toggle-switch">
-                        <input type="checkbox" ${gameState.soundEnabled ? 'checked' : ''} onclick="toggleSound()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-section">
-                    <h3>${t.achievements}</h3>
-                    <div id="achievementsList"></div>
-                </div>
-                <div class="settings-section">
-                    <h3>${t.gameManagement}</h3>
-                    <button class="reset-btn" onclick="resetProgress()" style="background: var(--reset-btn);">${t.resetProgress}</button>
-                    <button class="reset-btn" onclick="prestige()" style="margin-top: 10px; background: var(--secondary);" ${gameState.score >= 1000000 ? '' : 'disabled'}>${t.prestige}</button>
-                    <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
-                        ${t.enterCheat}
-                    </button>
-                    <button class="donate-btn" onclick="showDonatePopup()">${t.donate}</button>
-                </div>
+                    <div class="settings-section">
+                        <h3>${t.theme}</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${gameState.darkMode ? 'checked' : ''} onclick="toggleDarkMode()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-section">
+                        <h3>${t.sound}</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${gameState.soundEnabled ? 'checked' : ''} onclick="toggleSound()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-section">
+                        <h3>${t.achievements}</h3>
+                        <div id="achievementsList"></div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>${t.gameManagement}</h3>
+                        <button class="reset-btn" onclick="resetProgress()" style="background: var(--reset-btn);">${t.resetProgress}</button>
+                        <button class="reset-btn" onclick="prestige()" style="margin-top: 10px; background: var(--secondary);" ${gameState.score >= 1000000 ? '' : 'disabled'}>${t.prestige}</button>
+                        <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
+                            ${t.enterCheat}
+                        </button>
+                    </div>
             `;
             
             if (gameState.usedPromoCodes.length > 0) {
@@ -1540,26 +1570,12 @@
                 `;
             }
             
+            html += `
+                </div>
+            `;
+            
             DOM.settingsContent.innerHTML = html;
             renderAchievements();
-        }
-
-        function showDonatePopup() {
-            tg.showPopup({
-                title: 'Донат',
-                message: 'Поддержите игру Telegram Stars!',
-                buttons: [
-                    {id: '10', type: 'default', text: '10 ⭐'},
-                    {id: '50', type: 'default', text: '50 ⭐'},
-                    {id: '100', type: 'default', text: '100 ⭐'},
-                    {type: 'cancel'}
-                ]
-            }, (buttonId) => {
-                if (buttonId) {
-                    tg.sendData(JSON.stringify({action: 'donate', amount: parseInt(buttonId)}));
-                    tg.showAlert('Запрос на донат отправлен боту.');
-                }
-            });
         }
 
         function renderAchievements() {
@@ -1586,21 +1602,13 @@
 
         function applyColorScheme() {
             const scheme = colorSchemes[gameState.colorScheme];
-            let primary = scheme.primary;
-            let secondary = scheme.secondary;
-            let accent = scheme.accent;
-            if (gameState.darkMode) {
-                primary = shadeColor(primary, -30);
-                secondary = shadeColor(secondary, -30);
-                accent = shadeColor(accent, -30);
-            }
-            document.documentElement.style.setProperty('--primary', primary);
-            document.documentElement.style.setProperty('--primary-dark', shadeColor(primary, -20));
-            document.documentElement.style.setProperty('--secondary', secondary);
-            document.documentElement.style.setProperty('--accent', accent);
-            document.documentElement.style.setProperty('--primary-rgb', hexToRgb(primary));
+            document.documentElement.style.setProperty('--primary', scheme.primary);
+            document.documentElement.style.setProperty('--primary-dark', shadeColor(scheme.primary, -20));
+            document.documentElement.style.setProperty('--secondary', scheme.secondary);
+            document.documentElement.style.setProperty('--accent', scheme.accent);
+            document.documentElement.style.setProperty('--primary-rgb', hexToRgb(scheme.primary));
             
-            DOM.clickButton.style.background = primary;
+            DOM.clickButton.style.background = scheme.primary;
         }
         
         function hexToRgb(hex) {
@@ -1640,17 +1648,17 @@
             
             if (cheats[code]) {
                 if (cheats[code].used) {
-                    alert(t.cheatUsed);
+                    tg.showAlert(t.cheatUsed);
                 } else {
                     cheats[code].used = true;
                     cheats[code].effect();
                     gameState.usedPromoCodes.push(code);
-                    alert(t.cheatSuccess + '\nБонус: ' + cheats[code].name);
+                    tg.showAlert(t.cheatSuccess + '\nБонус: ' + cheats[code].name);
                     renderAll();
                     saveGame();
                 }
             } else {
-                alert(t.cheatInvalid);
+                tg.showAlert(t.cheatInvalid);
             }
             
             hideCheatInput();
@@ -1659,43 +1667,49 @@
         function resetProgress(isPrestige = false) {
             const t = translations[gameState.language];
             
-            if (confirm(t.resetConfirm)) {
-                const oldMultiplier = gameState.globalMultiplier;
-                const oldPrestige = gameState.prestigeCount;
-                gameState = {
-                    score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-                    globalMultiplier: isPrestige ? oldMultiplier : 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
-                    upgrades: {
-                        clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
-                        clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
-                        autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
-                        autoClicker4: { owned: false }, autoClicker5: { owned: false }, autoClicker6: { owned: false },
-                        multiplier1: { owned: false }, multiplier2: { owned: false },
-                        secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false }
-                    },
-                    collectibles: {},
-                    achievements: {
-                        firstClick: { unlocked: false, name: 'Первый клик', desc: 'Сделайте первый клик' },
-                        hundredClicks: { unlocked: false, name: 'Сто кликов', desc: 'Сделайте 100 кликов' },
-                        millionPoints: { unlocked: false, name: 'Миллионер', desc: 'Заработайте 1,000,000 очков' },
-                        allUpgrades: { unlocked: false, name: 'Коллекционер', desc: 'Купите все улучшения' },
-                        firstCollectible: { unlocked: false, name: 'Первый артефакт', desc: 'Соберите первый коллекционный предмет' },
-                        tenCollectibles: { unlocked: false, name: 'Коллекционер артефактов', desc: 'Соберите 10 коллекционных предметов' }
-                    },
-                    prestigeCount: isPrestige ? oldPrestige : 0,
-                    usedPromoCodes: [],
-                    unlockedColors: ['purple'],
-                    totalPoints: 0
-                };
-                
-                Object.keys(cheats).forEach(code => {
-                    cheats[code].used = false;
-                });
-                
-                renderAll();
-                saveGame();
-                alert(t.resetSuccess);
-            }
+            tg.showConfirm(t.resetConfirm, (confirmed) => {
+                if (confirmed) {
+                    const oldMultiplier = gameState.globalMultiplier;
+                    const oldPrestige = gameState.prestigeCount;
+                    gameState = {
+                        score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
+                        globalMultiplier: isPrestige ? oldMultiplier : 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
+                        criticalChance: 0.15, dropBonus: 0,
+                        upgrades: {
+                            clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
+                            clickPower4: { owned: false }, clickPower5: { owned: false }, clickPower6: { owned: false },
+                            autoClicker1: { owned: false }, autoClicker2: { owned: false }, autoClicker3: { owned: false },
+                            autoClicker4: { owned: false }, autoClicker5: { owned: false }, autoClicker6: { owned: false },
+                            multiplier1: { owned: false }, multiplier2: { owned: false },
+                            secretUpgrade1: { owned: false }, secretUpgrade2: { owned: false },
+                            critical1: { owned: false }, critical2: { owned: false },
+                            dropChance1: { owned: false }, dropChance2: { owned: false },
+                            megaMultiplier: { owned: false }
+                        },
+                        collectibles: {},
+                        achievements: {
+                            firstClick: { unlocked: false, name: 'Первый клик', desc: 'Сделайте первый клик' },
+                            hundredClicks: { unlocked: false, name: 'Сто кликов', desc: 'Сделайте 100 кликов' },
+                            millionPoints: { unlocked: false, name: 'Миллионер', desc: 'Заработайте 1,000,000 очков' },
+                            allUpgrades: { unlocked: false, name: 'Коллекционер', desc: 'Купите все улучшения' },
+                            firstCollectible: { unlocked: false, name: 'Первый артефакт', desc: 'Соберите первый коллекционный предмет' },
+                            tenCollectibles: { unlocked: false, name: 'Коллекционер артефактов', desc: 'Соберите 10 коллекционных предметов' }
+                        },
+                        prestigeCount: isPrestige ? oldPrestige : 0,
+                        usedPromoCodes: [],
+                        unlockedColors: ['purple'],
+                        totalPoints: 0
+                    };
+                    
+                    Object.keys(cheats).forEach(code => {
+                        cheats[code].used = false;
+                    });
+                    
+                    renderAll();
+                    saveGame();
+                    tg.showAlert(t.resetSuccess);
+                }
+            });
         }
 
         function saveGame() {
@@ -1724,7 +1738,9 @@
                     totalPoints: loaded.totalPoints || 0,
                     darkMode: loaded.darkMode || false,
                     soundEnabled: loaded.soundEnabled !== undefined ? loaded.soundEnabled : true,
-                    prestigeCount: loaded.prestigeCount || 0
+                    prestigeCount: loaded.prestigeCount || 0,
+                    criticalChance: loaded.criticalChance || 0.15,
+                    dropBonus: loaded.dropBonus || 0
                 };
                 
                 // Re-apply collectible effects on load
