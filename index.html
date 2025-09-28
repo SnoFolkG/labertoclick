@@ -38,32 +38,6 @@
     }
 
     :root {
-        --primary: #6C5CE7;
-        --primary-dark: #5649C0;
-        --primary-rgb: 108, 92, 231;
-        --secondary: #00B894;
-        --accent: #FD79A8;
-        --text: #2D3436;
-        --text-light: #636E72;
-        --bg: #F5F6FA;
-        --card-bg: #FFFFFF;
-        --border: #DFE6E9;
-        --stat-bg: #FFFFFF;
-        --reset-btn: #E17055;
-        --owned-bg: #F0F3F7;
-        --owned-text: #7F8C8D;
-        --premium: #FDCB6E;
-        --legendary: #E84393;
-        --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-        --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-        --radius-sm: 6px;
-        --radius-md: 10px;
-        --radius-lg: 14px;
-        --radius-xl: 18px;
-    }
-    
-    body.dark {
         --primary: #A29BFE;
         --primary-dark: #847BFF;
         --primary-rgb: 162, 155, 254;
@@ -80,6 +54,13 @@
         --owned-text: #7F8C8D;
         --premium: #FDCB6E;
         --legendary: #E84393;
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --radius-xl: 18px;
     }
 
     .container {
@@ -210,14 +191,14 @@
         letter-spacing: -1px;
     }
     
-    .upgrades-container, .collections-container {
+    .upgrades-container, .collections-container, .prestige-shop-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 15px;
         margin-top: 15px;
     }
     
-    .upgrade, .collectible {
+    .upgrade, .collectible, .prestige-item {
         background: var(--card-bg);
         border-radius: var(--radius-md);
         padding: 16px;
@@ -227,39 +208,39 @@
         border: 1px solid var(--border);
     }
     
-    .upgrade:hover, .collectible:hover {
+    .upgrade:hover, .collectible:hover, .prestige-item:hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow-md);
     }
     
-    .upgrade.owned, .collectible.owned {
+    .upgrade.owned, .collectible.owned, .prestige-item.owned {
         background: var(--owned-bg);
         order: 1;
     }
     
-    .upgrade.owned .upgrade-name, .collectible.owned .collectible-name {
+    .upgrade.owned .upgrade-name, .collectible.owned .collectible-name, .prestige-item.owned .prestige-name {
         color: var(--owned-text);
     }
     
-    .upgrade.owned .upgrade-desc, .collectible.owned .collectible-desc {
+    .upgrade.owned .upgrade-desc, .collectible.owned .collectible-desc, .prestige-item.owned .prestige-desc {
         color: var(--owned-text);
     }
     
-    .upgrade.owned .upgrade-btn {
+    .upgrade.owned .upgrade-btn, .prestige-item.owned .prestige-btn {
         background: var(--owned-bg);
         color: var(--owned-text);
         border: 1px solid var(--owned-text);
     }
     
-    .upgrade.premium, .collectible.common {
+    .upgrade.premium, .collectible.common, .prestige-item.premium {
         border-left: 4px solid var(--premium);
     }
     
-    .upgrade.special-upgrade, .collectible.rare {
+    .upgrade.special-upgrade, .collectible.rare, .prestige-item.special {
         border-left: 4px solid var(--accent);
     }
     
-    .upgrade.legendary, .collectible.epic {
+    .upgrade.legendary, .collectible.epic, .prestige-item.legendary {
         border-left: 4px solid var(--legendary);
         animation: glow 2s infinite alternate;
     }
@@ -269,24 +250,24 @@
         animation: glow 2s infinite alternate;
     }
     
-    .upgrade-header, .collectible-header {
+    .upgrade-header, .collectible-header, .prestige-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 12px;
     }
     
-    .upgrade-name, .collectible-name {
+    .upgrade-name, .collectible-name, .prestige-name {
         font-weight: 700;
         font-size: clamp(1rem, 3.5vw, 1.15rem);
         color: var(--primary);
     }
     
-    .upgrade-name.premium, .collectible-name.common {
+    .upgrade-name.premium, .collectible-name.common, .prestige-name.premium {
         color: var(--premium);
     }
     
-    .upgrade-name.legendary, .collectible-name.legendary {
+    .upgrade-name.legendary, .collectible-name.legendary, .prestige-name.legendary {
         color: var(--legendary);
     }
     
@@ -298,7 +279,7 @@
         color: #9B59B6;
     }
     
-    .upgrade-cost {
+    .upgrade-cost, .prestige-cost {
         background: var(--accent);
         color: white;
         padding: 4px 10px;
@@ -307,24 +288,24 @@
         font-weight: bold;
     }
     
-    .upgrade-cost.premium {
+    .upgrade-cost.premium, .prestige-cost.premium {
         background: var(--premium);
         color: var(--text);
     }
     
-    .upgrade-cost.legendary {
+    .upgrade-cost.legendary, .prestige-cost.legendary {
         background: var(--legendary);
         color: white;
     }
     
-    .upgrade-desc, .collectible-desc {
+    .upgrade-desc, .collectible-desc, .prestige-desc {
         color: var(--text-light);
         margin-bottom: 16px;
         font-size: clamp(0.85rem, 3vw, 0.95rem);
         line-height: 1.4;
     }
     
-    .upgrade-btn {
+    .upgrade-btn, .prestige-btn {
         width: 100%;
         padding: 10px;
         border: none;
@@ -338,25 +319,25 @@
         -webkit-appearance: none;
     }
     
-    .upgrade-btn:hover:not(:disabled) {
+    .upgrade-btn:hover:not(:disabled), .prestige-btn:hover:not(:disabled) {
         background: var(--primary-dark);
     }
     
-    .upgrade-btn:active:not(:disabled) {
+    .upgrade-btn:active:not(:disabled), .prestige-btn:active:not(:disabled) {
         transform: translateY(1px);
     }
     
-    .upgrade-btn:disabled {
+    .upgrade-btn:disabled, .prestige-btn:disabled {
         opacity: 0.7;
         cursor: not-allowed;
         transform: none !important;
     }
     
-    .upgrade-btn.premium {
+    .upgrade-btn.premium, .prestige-btn.premium {
         background: var(--premium);
     }
     
-    .upgrade-btn.legendary {
+    .upgrade-btn.legendary, .prestige-btn.legendary {
         background: var(--legendary);
     }
     
@@ -815,6 +796,49 @@
         color: var(--text-light);
         font-size: 0.9rem;
     }
+
+    .tutorial-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 100;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    }
+    
+    .tutorial-box {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: var(--radius-lg);
+        width: 90%;
+        max-width: 380px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+        text-align: left;
+    }
+    
+    .tutorial-box h3 {
+        color: var(--primary);
+    }
+    
+    .tutorial-box p {
+        margin: 10px 0;
+    }
+    
+    .tutorial-box button {
+        width: 100%;
+        padding: 10px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+    }
 </style>
 </head>
 <body>
@@ -826,6 +850,7 @@
         <div class="tabs">
             <div class="tab active" data-tab="clicker">Кликер</div>
             <div class="tab" data-tab="upgrades">Улучшения</div>
+            <div class="tab" data-tab="prestige">Престиж Магазин</div>
             <div class="tab" data-tab="collections">Коллекции</div>
             <div class="tab" data-tab="settings">Настройки</div>
         </div>
@@ -871,6 +896,12 @@
             <div class="upgrades-container" id="upgradesList"></div>
         </div>
         
+        <div class="tab-content" id="prestige-tab">
+            <h2>Престиж Магазин</h2>
+            <p>Улучшения, доступные после престижа. Стоимость от 1,000,000 очков.</p>
+            <div class="prestige-shop-container" id="prestigeShop"></div>
+        </div>
+        
         <div class="tab-content" id="collections-tab">
             <h2>Коллекции</h2>
             <p>Собирайте редкие предметы, которые падают случайно при кликах! Каждый предмет даёт уникальный бонус.</p>
@@ -908,6 +939,17 @@
         </div>
     </div>
 
+    <div class="tutorial-container" id="tutorialContainer">
+        <div class="tutorial-box">
+            <h3>Добро пожаловать в La Berto's Click!</h3>
+            <p>Нажмите на кнопку "КЛИК!" чтобы зарабатывать очки.</p>
+            <p>Купите улучшения в вкладке "Улучшения" для автоматизации и усиления.</p>
+            <p>Собирайте коллекции для бонусов.</p>
+            <p>Когда наберёте достаточно очков, используйте престиж для мощных улучшений.</p>
+            <button onclick="hideTutorial()">Начать игру</button>
+        </div>
+    </div>
+
     <audio id="clickSound" src="https://www.soundjay.com/buttons/button-10.mp3" preload="auto"></audio>
     <audio id="buySound" src="https://www.soundjay.com/buttons/button-17.mp3" preload="auto"></audio>
     <audio id="prestigeSound" src="https://www.soundjay.com/buttons/button-4.mp3" preload="auto"></audio>
@@ -920,7 +962,7 @@
         
         const translations = {
             ru: {
-                clicker: "Кликер", upgrades: "Улучшения", collections: "Коллекции", settings: "Настройки",
+                clicker: "Кликер", upgrades: "Улучшения", prestige: "Престиж Магазин", collections: "Коллекции", settings: "Настройки",
                 clickButton: "КЛИК!", points: "очков", upgrade: "Улучшить", bought: "Куплено", activated: "Активировано!",
                 perClick: "Очков за клик:", perSecond: "Очков в секунду:", multiplier: "Множитель очков:",
                 totalClicks: "Всего кликов:", totalPoints: "Всего очков заработано:", totalCollectibles: "Коллекционные предметы:",
@@ -1031,7 +1073,7 @@
         
         let gameState = {
             score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-            globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
+            globalMultiplier: 1, colorScheme: 'purple', language: 'ru', darkMode: true, soundEnabled: true,
             criticalChance: 0.15, dropBonus: 0,
             upgrades: {
                 clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
@@ -1043,6 +1085,11 @@
                 critical1: { owned: false }, critical2: { owned: false },
                 dropChance1: { owned: false }, dropChance2: { owned: false },
                 megaMultiplier: { owned: false }
+            },
+            prestigeUpgrades: {
+                prestigeMultiplier1: { owned: false },
+                prestigeClickPower: { owned: false },
+                prestigeAutoPower: { owned: false }
             },
             collectibles: {}, // {id: {owned: true}}
             achievements: {
@@ -1056,7 +1103,9 @@
             prestigeCount: 0,
             usedPromoCodes: [],
             unlockedColors: ['purple'],
-            totalPoints: 0
+            totalPoints: 0,
+            firstLaunch: true,
+            prestigeThreshold: 10000000
         };
         
         const upgrades = {
@@ -1080,11 +1129,18 @@
             dropChance2: { cost: 15000, effect: () => { gameState.dropBonus += 0.01; }, type: 'drop' },
             megaMultiplier: { cost: 1000000, effect: () => { gameState.globalMultiplier *= 3; }, type: 'multiplier' }
         };
+
+        const prestigeUpgrades = {
+            prestigeMultiplier1: { cost: 1000000, effect: () => { gameState.globalMultiplier *= 1.5; }, type: 'multiplier' },
+            prestigeClickPower: { cost: 2000000, effect: () => { gameState.clickPower *= 2; }, type: 'click' },
+            prestigeAutoPower: { cost: 3000000, effect: () => { gameState.autoClickPower *= 2; }, type: 'auto' }
+        };
         
         const DOM = {
             score: document.getElementById('score'),
             clickButton: document.getElementById('clickButton'),
             upgradesList: document.getElementById('upgradesList'),
+            prestigeShop: document.getElementById('prestigeShop'),
             collectionsList: document.getElementById('collectionsList'),
             settingsContent: document.getElementById('settingsContent'),
             cheatContainer: document.getElementById('cheatContainer'),
@@ -1093,6 +1149,7 @@
             cheatCancel: document.getElementById('cheatCancel'),
             cheatBackspace: document.getElementById('cheatBackspace'),
             cheatClear: document.getElementById('cheatClear'),
+            tutorialContainer: document.getElementById('tutorialContainer'),
             clickSound: document.getElementById('clickSound'),
             buySound: document.getElementById('buySound'),
             prestigeSound: document.getElementById('prestigeSound'),
@@ -1104,12 +1161,25 @@
             setupEventListeners();
             renderAll();
             startGameLoop();
+            if (gameState.firstLaunch || gameState.score === 0 && gameState.prestigeCount === 0) {
+                showTutorial();
+                gameState.firstLaunch = false;
+                saveGame();
+            }
             
             if (tg && tg.MainButton) {
                 tg.MainButton.setText("Закрыть игру");
                 tg.MainButton.show();
                 tg.MainButton.onClick(() => { saveGame(); tg.close(); });
             }
+        }
+        
+        function showTutorial() {
+            DOM.tutorialContainer.style.display = 'flex';
+        }
+        
+        function hideTutorial() {
+            DOM.tutorialContainer.style.display = 'none';
         }
         
         function setupEventListeners() {
@@ -1246,6 +1316,24 @@
             }
         }
         
+        function buyPrestigeUpgrade(id) {
+            const upgrade = prestigeUpgrades[id];
+            const cost = parseInt(upgrade.cost);
+            
+            if (gameState.score >= cost && !gameState.prestigeUpgrades[id]?.owned) {
+                gameState.score -= cost;
+                gameState.prestigeUpgrades[id].owned = true;
+                upgrade.effect();
+                
+                if (gameState.soundEnabled) DOM.buySound.play().catch(() => {});
+                
+                renderPrestigeShop();
+                updateUI();
+                checkAchievements();
+                saveGame();
+            }
+        }
+        
         function buyColorScheme(scheme) {
             if (gameState.unlockedColors.includes(scheme)) {
                 gameState.colorScheme = scheme;
@@ -1278,12 +1366,13 @@
         
         function prestige() {
             const t = translations[gameState.language];
-            if (gameState.score < 1000000) return;
+            if (gameState.score < gameState.prestigeThreshold) return;
             tg.showConfirm(t.prestigeConfirm, (confirmed) => {
                 if (confirmed) {
                     resetProgress(true);
                     gameState.globalMultiplier *= 2 + (gameState.prestigeCount * 0.5);
                     gameState.prestigeCount++;
+                    gameState.prestigeThreshold += 10000000;
                     if (gameState.soundEnabled) DOM.prestigeSound.play().catch(() => {});
                     tg.showAlert(t.prestigeSuccess);
                     renderAll();
@@ -1416,7 +1505,7 @@
                 },
                 {
                     id: 'megaMultiplier', name: 'Мега множитель', cost: 1000000, 
-                    desc: 'Увеличивает глобальный множитель в 3 раза', owned: gameState.upgrades.megaMultiplier.owned, type: 'multiplier', class: 'legendary'
+                    desc: 'Увеличивает глобальный множитель в 3 раза', owned: gameState.upgrades.megaMultiplier.owned, type: 'multiplier'
                 }
             ];
             
@@ -1450,11 +1539,10 @@
             
             filteredUpgrades.forEach(up => {
                 const costText = typeof up.cost === 'number' ? up.cost.toLocaleString() : up.cost;
-                const upgradeClass = up.class || '';
                 
                 if (up.owned) {
                     html += `
-                        <div class="upgrade owned ${upgradeClass}">
+                        <div class="upgrade owned">
                             <div class="upgrade-header"><span class="upgrade-name">${up.name}</span><span class="upgrade-cost">${t.bought}</span></div>
                             <div class="upgrade-desc">${up.desc}</div>
                             <button class="upgrade-btn" disabled>${t.bought}</button>
@@ -1465,7 +1553,7 @@
                     const isSpecial = up.type === 'special';
                     
                     html += `
-                        <div class="upgrade ${isSpecial ? 'special-upgrade' : ''} ${upgradeClass}">
+                        <div class="upgrade ${isSpecial ? 'special-upgrade' : ''}">
                             <div class="upgrade-header">
                                 <span class="upgrade-name">${up.name}</span>
                                 <span class="upgrade-cost">${costText}</span>
@@ -1480,6 +1568,57 @@
             });
 
             DOM.upgradesList.innerHTML = html;
+        }
+        
+        function renderPrestigeShop() {
+            const t = translations[gameState.language];
+            let html = '';
+            
+            const prestigeItems = [
+                {
+                    id: 'prestigeMultiplier1', name: 'Престиж Множитель I', cost: 1000000, 
+                    desc: 'Увеличивает глобальный множитель на 50%', owned: gameState.prestigeUpgrades.prestigeMultiplier1.owned, type: 'multiplier'
+                },
+                {
+                    id: 'prestigeClickPower', name: 'Престиж Сила Клика', cost: 2000000, 
+                    desc: 'Удваивает силу клика', owned: gameState.prestigeUpgrades.prestigeClickPower.owned, type: 'click'
+                },
+                {
+                    id: 'prestigeAutoPower', name: 'Престиж Авто Сила', cost: 3000000, 
+                    desc: 'Удваивает силу автокликеров', owned: gameState.prestigeUpgrades.prestigeAutoPower.owned, type: 'auto'
+                }
+            ];
+            
+            prestigeItems.forEach(item => {
+                const costText = item.cost.toLocaleString();
+                
+                if (item.owned) {
+                    html += `
+                        <div class="prestige-item owned">
+                            <div class="prestige-header"><span class="prestige-name">${item.name}</span><span class="prestige-cost">${t.bought}</span></div>
+                            <div class="prestige-desc">${item.desc}</div>
+                            <button class="prestige-btn" disabled>${t.bought}</button>
+                        </div>
+                    `;
+                } else {
+                    const canBuy = gameState.score >= item.cost;
+                    
+                    html += `
+                        <div class="prestige-item">
+                            <div class="prestige-header">
+                                <span class="prestige-name">${item.name}</span>
+                                <span class="prestige-cost">${costText}</span>
+                            </div>
+                            <div class="prestige-desc">${item.desc}</div>
+                            <button class="prestige-btn" onclick="buyPrestigeUpgrade('${item.id}')" ${canBuy ? '' : 'disabled'}>
+                                ${t.upgrade}
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+
+            DOM.prestigeShop.innerHTML = html;
         }
         
         function renderCollections() {
@@ -1507,10 +1646,9 @@
             const t = translations[gameState.language];
             
             let html = `
-                <div class="settings-container">
-                    <div class="settings-section">
-                        <h3>${t.colorTheme}</h3>
-                        <div class="color-options">
+                <div class="settings-section">
+                    <h3>${t.colorTheme}</h3>
+                    <div class="color-options">
             `;
             
             Object.keys(colorSchemes).forEach(scheme => {
@@ -1527,34 +1665,34 @@
             });
             
             html += `
-                        </div>
                     </div>
-                    <div class="settings-section">
-                        <h3>${t.theme}</h3>
-                        <label class="toggle-switch">
-                            <input type="checkbox" ${gameState.darkMode ? 'checked' : ''} onclick="toggleDarkMode()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="settings-section">
-                        <h3>${t.sound}</h3>
-                        <label class="toggle-switch">
-                            <input type="checkbox" ${gameState.soundEnabled ? 'checked' : ''} onclick="toggleSound()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="settings-section">
-                        <h3>${t.achievements}</h3>
-                        <div id="achievementsList"></div>
-                    </div>
-                    <div class="settings-section">
-                        <h3>${t.gameManagement}</h3>
-                        <button class="reset-btn" onclick="resetProgress()" style="background: var(--reset-btn);">${t.resetProgress}</button>
-                        <button class="reset-btn" onclick="prestige()" style="margin-top: 10px; background: var(--secondary);" ${gameState.score >= 1000000 ? '' : 'disabled'}>${t.prestige}</button>
-                        <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
-                            ${t.enterCheat}
-                        </button>
-                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>${t.theme}</h3>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${gameState.darkMode ? 'checked' : ''} onclick="toggleDarkMode()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-section">
+                    <h3>${t.sound}</h3>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${gameState.soundEnabled ? 'checked' : ''} onclick="toggleSound()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-section">
+                    <h3>${t.achievements}</h3>
+                    <div id="achievementsList"></div>
+                </div>
+                <div class="settings-section">
+                    <h3>${t.gameManagement}</h3>
+                    <button class="reset-btn" onclick="resetProgress()" style="background: var(--reset-btn);">${t.resetProgress}</button>
+                    <button class="reset-btn" onclick="prestige()" style="margin-top: 10px; background: var(--secondary);" ${gameState.score >= gameState.prestigeThreshold ? '' : 'disabled'}>${t.prestige}</button>
+                    <button class="reset-btn" onclick="showCheatInput()" style="margin-top: 10px; background: var(--primary);">
+                        ${t.enterCheat}
+                    </button>
+                </div>
             `;
             
             if (gameState.usedPromoCodes.length > 0) {
@@ -1569,10 +1707,6 @@
                     </div>
                 `;
             }
-            
-            html += `
-                </div>
-            `;
             
             DOM.settingsContent.innerHTML = html;
             renderAchievements();
@@ -1594,6 +1728,7 @@
         function renderAll() {
             updateUI();
             renderUpgrades();
+            renderPrestigeShop();
             renderCollections();
             renderSettings();
             applyColorScheme();
@@ -1671,9 +1806,10 @@
                 if (confirmed) {
                     const oldMultiplier = gameState.globalMultiplier;
                     const oldPrestige = gameState.prestigeCount;
+                    const oldThreshold = gameState.prestigeThreshold;
                     gameState = {
                         score: 0, totalClicks: 0, clickPower: 1, autoClickers: 0, autoClickPower: 1,
-                        globalMultiplier: isPrestige ? oldMultiplier : 1, colorScheme: 'purple', language: 'ru', darkMode: false, soundEnabled: true,
+                        globalMultiplier: isPrestige ? oldMultiplier : 1, colorScheme: 'purple', language: 'ru', darkMode: true, soundEnabled: true,
                         criticalChance: 0.15, dropBonus: 0,
                         upgrades: {
                             clickPower1: { owned: false }, clickPower2: { owned: false }, clickPower3: { owned: false },
@@ -1685,6 +1821,11 @@
                             critical1: { owned: false }, critical2: { owned: false },
                             dropChance1: { owned: false }, dropChance2: { owned: false },
                             megaMultiplier: { owned: false }
+                        },
+                        prestigeUpgrades: isPrestige ? gameState.prestigeUpgrades : {
+                            prestigeMultiplier1: { owned: false },
+                            prestigeClickPower: { owned: false },
+                            prestigeAutoPower: { owned: false }
                         },
                         collectibles: {},
                         achievements: {
@@ -1698,7 +1839,9 @@
                         prestigeCount: isPrestige ? oldPrestige : 0,
                         usedPromoCodes: [],
                         unlockedColors: ['purple'],
-                        totalPoints: 0
+                        totalPoints: 0,
+                        firstLaunch: false,
+                        prestigeThreshold: isPrestige ? oldThreshold : 10000000
                     };
                     
                     Object.keys(cheats).forEach(code => {
@@ -1708,6 +1851,9 @@
                     renderAll();
                     saveGame();
                     tg.showAlert(t.resetSuccess);
+                    if (!isPrestige) {
+                        showTutorial();
+                    }
                 }
             });
         }
@@ -1728,6 +1874,10 @@
                         ...gameState.upgrades,
                         ...loaded.upgrades
                     },
+                    prestigeUpgrades: {
+                        ...gameState.prestigeUpgrades,
+                        ...loaded.prestigeUpgrades
+                    },
                     collectibles: loaded.collectibles || {},
                     achievements: {
                         ...gameState.achievements,
@@ -1740,7 +1890,8 @@
                     soundEnabled: loaded.soundEnabled !== undefined ? loaded.soundEnabled : true,
                     prestigeCount: loaded.prestigeCount || 0,
                     criticalChance: loaded.criticalChance || 0.15,
-                    dropBonus: loaded.dropBonus || 0
+                    dropBonus: loaded.dropBonus || 0,
+                    prestigeThreshold: loaded.prestigeThreshold || 10000000
                 };
                 
                 // Re-apply collectible effects on load
@@ -1762,12 +1913,14 @@
 
         window.onload = initGame;
         window.buyUpgrade = buyUpgrade;
+        window.buyPrestigeUpgrade = buyPrestigeUpgrade;
         window.buyColorScheme = buyColorScheme;
         window.resetProgress = resetProgress;
         window.showCheatInput = showCheatInput;
         window.toggleDarkMode = toggleDarkMode;
         window.toggleSound = toggleSound;
         window.prestige = prestige;
+        window.hideTutorial = hideTutorial;
     </script>
 </body>
 </html>
